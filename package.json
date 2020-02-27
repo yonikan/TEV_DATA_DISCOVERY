@@ -40,7 +40,7 @@
     "moment": "^2.24.0",
     "moment-range": "^4.0.2",
     "moment-timezone": "^0.5.27",
-    "ngx-cookie-service": "^2.2.0",
+    "ngx-cookie-service": "^2.4.0",
     "ngx-show-hide-password": "^2.1.0",
     "ngx-swiper-wrapper": "^8.0.2",
     "ngx-webstorage-service": "^4.1.0",

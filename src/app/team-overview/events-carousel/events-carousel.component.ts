@@ -59,17 +59,22 @@ export class EventsCarouselComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    const TEAM_ID = this.authService.getUserLoginData().teams[0].id;
-    const BASE_URL = this.serverEnvService.getBaseUrl();
-    const API_VERSION = 'v2';
-    this.http
-      .get<any>(`${BASE_URL}/${API_VERSION}/team/${TEAM_ID}/team-events/unvalidated`)
-      .subscribe((result: any) => {
-        this.teamEvents = result;
-        this.isTeamEventsLoading = false;
-      }, (err) => {
-        console.log('err: ', err);
-      });
+	  const [team] = this.authService.getUserLoginData().teams;
+	  console.log('team', team);
+	  if (team) {
+		const TEAM_ID = this.authService.getUserLoginData().teams[0].id;
+		const BASE_URL = this.serverEnvService.getBaseUrl();
+		const API_VERSION = 'v2';
+		this.http
+		  .get<any>(`${BASE_URL}/${API_VERSION}/team/${TEAM_ID}/team-events/unvalidated`)
+		  .subscribe((result: any) => {
+			this.teamEvents = result;
+			this.isTeamEventsLoading = false;
+		  }, (err) => {
+			console.log('err: ', err);
+		  });
+	  }
+
 
     this.teamEventAfterValidationSub = this.teamOverviewService
       .getTeamEventAfterValidationListener()
