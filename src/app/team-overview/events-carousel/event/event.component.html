@@ -25,7 +25,7 @@
                         <span *ngIf="eventData.type === 1">match</span>
                         <span *ngIf="eventData.type === 2">training</span>
                     </button>
-                    <button mat-menu-item (click)="deleteSession(eventData.id)">
+                    <button mat-menu-item (click)="deleteSession()">
                         <i class="demo-icon icon-delete">&#xe82b;</i>
                         <span>delete {{ teamEventTypeString }}</span>
                         <!-- <span>{{ 'team-overview.events-carousel.delete-session' | translate }}</span> -->
@@ -47,7 +47,7 @@
             <div class="event-content-header">
                 <div class="event-content-title" [ngClass]="{'validated-event-style':eventData.isValidated}">
                     <i *ngIf="eventData.type === 2" class="demo-icon icon-calender">&#xe816;</i>
-                    <i *ngIf="eventData.type === 1" class="demo-icon icon-vlc-new">&#xe815;</i>  
+                    <i *ngIf="eventData.type === 1" class="demo-icon icon-vlc-new">&#xe815;</i>
                     <!-- <h4 *ngIf="!eventData.isValidated" [ngClass]="{'validated-event-style':eventData.isValidated}">new {{ teamEventTypeString }}</h4> -->
                     <!-- <h4 *ngIf="eventData.isValidated" [ngClass]="{'validated-event-style':eventData.isValidated}">
                         <span *ngIf="eventData.type === 2">Match</span>
@@ -62,7 +62,7 @@
                     </span>
                 </div>
             </div>
-            
+
             <div class="event-content-info">
                 <div class="info-titles">
                     <div>duration</div>
@@ -87,7 +87,7 @@
                 </div> -->
                 <!-- <div class="info-players">
                     <div class="info-title">{{ 'team-overview.events-carousel.players' | translate }}:</div>
-                    {{ eventData.valid_players }} / {{ eventData.activated_players }} 
+                    {{ eventData.valid_players }} / {{ eventData.activated_players }}
                     <mat-icon *ngIf="eventData.valid_players !== eventData.activated_players">error_outline</mat-icon>
                 </div>
                 <div class="info-phases">
@@ -95,7 +95,7 @@
                     {{ eventData.phases }}
                 </div> -->
             </div>
-        
+
             <div *ngIf="!eventData.isValidated" class="event-content-confirm">
                 <button class="confirm-button" mat-raised-button (click)="confirmSession()">
                     {{ 'team-overview.events-carousel.validate-session' | translate }} {{ teamEventTypeString }}
@@ -103,11 +103,11 @@
             </div>
             <div *ngIf="eventData.isValidated" class="event-content-buttons">
                 <button class="action-btn" mat-raised-button (click)="downloadPdfReport('teamReport')">
-                    <i class="demo-icon icon-pdf-icon">&#xe821;</i> 
+                    <i class="demo-icon icon-pdf-icon">&#xe821;</i>
                     <span>Team Reports</span>
                 </button>
                 <button class="action-btn" mat-raised-button (click)="downloadPdfReport('individualReport')">
-                    <i class="demo-icon icon-pdf-icon">&#xe821;</i> 
+                    <i class="demo-icon icon-pdf-icon">&#xe821;</i>
                     <span>Individual Reports</span>
                 </button>
             </div>

@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import moment from "moment-timezone";
+import * as moment from 'moment';
 
 @Pipe({
 	name: 'convertedDate'
