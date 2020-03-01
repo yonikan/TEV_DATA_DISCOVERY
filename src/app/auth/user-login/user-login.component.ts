@@ -15,7 +15,7 @@ export class UserLoginComponent implements OnInit, OnDestroy {
   userLoginFormGroup: FormGroup;
   username = null;
   password = null;
-  isPasswordCurrect: boolean;
+  isPasswordCorrect: boolean;
 
   constructor(public authService: AuthService, private formBuilder: FormBuilder) {}
 
@@ -49,11 +49,11 @@ export class UserLoginComponent implements OnInit, OnDestroy {
     this.authService.login(this.userLoginFormGroup.value.emailText, this.userLoginFormGroup.value.passwordText)
       .subscribe(
         (userLoginDataResponse: any) => {
-          this.isPasswordCurrect = true;
+          this.isPasswordCorrect = true;
           this.authService.loginResponseHandle(userLoginDataResponse);
         },
         (error) => {
-          this.isPasswordCurrect = false;
+          this.isPasswordCorrect = false;
           this.isLoading = false;
         }
       );

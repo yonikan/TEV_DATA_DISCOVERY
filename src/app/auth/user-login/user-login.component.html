@@ -21,7 +21,7 @@
                     (userLoginFormGroup.get('emailText').invalid || userLoginFormGroup.get('passwordText').invalid)">
                     {{ 'auth.general.incorrect-email-and/or-password' | translate }}
             </mat-error>
-            <mat-error *ngIf="!isPasswordCurrect && isPasswordCurrect !== undefined">
+            <mat-error *ngIf="!isPasswordCorrect && isPasswordCorrect !== undefined">
                 incorect password
             </mat-error>
             
