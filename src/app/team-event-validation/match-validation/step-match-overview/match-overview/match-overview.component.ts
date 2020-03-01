@@ -13,56 +13,44 @@ export class MatchOverviewComponent implements OnInit {
   @Input() stepMatchOverviewData: any;
   @Output() matchOverviewEmitter = new EventEmitter<any>();
 
-  competitionOptions;
+  competitionOptions: any;
 
-  // selectedCompetition;
-  dataManager = {
-    selectedCompetition: null,
-    selecedHost: null,
-    selectedScore: null,
-    selectedOpponentScore: null,
-    selectedOpponent: null
-  };
-
-  moment = moment;
+  moment: any = moment;
 
   constructor(public teamEventValidationService: TeamEventValidationService) { }
 
   ngOnInit() {
-    // console.log('getStaticPositionsList: ', this.teamEventValidationService.getStaticPositionsList());
     this.competitionOptions = this.teamEventValidationService.getStaticCompetitionsList();
     this.setDefaults();
     // console.log(this.stepMatchOverviewData);
   }
 
-  setDefaults() {
+  setDefaults(): void {
     if (!this.stepMatchOverviewData) { return; };
-    if (!this.stepMatchOverviewData.competition) { this.setGameData(1, 'selectedCompetition', 'competition') };
-    if (!this.stepMatchOverviewData.vanue) { this.setGameData(1, 'selecedHost', 'vanue') };
-    if (!this.stepMatchOverviewData.myScore && this.stepMatchOverviewData.myScore !== 0) { this.setGameData(0, 'selectedScore', 'myScore') };
-    if (!this.stepMatchOverviewData.opponentScore && this.stepMatchOverviewData.opponentScore !== 0) { this.setGameData(0, 'selectedOpponentScore', 'opponentScore') };
+    if (!this.stepMatchOverviewData.competition) { this.setGameData(1, 'competition') };
+    if (!this.stepMatchOverviewData.vanue) { this.setGameData(1, 'vanue') };
+    if (!this.stepMatchOverviewData.myScore) { this.setGameData(0, 'myScore') };
+    if (!this.stepMatchOverviewData.opponentScore) { this.setGameData(0, 'opponentScore') };
   }
 
-  populateData(value, keyToUpdate) {
+  populateData(value: any, keyToUpdate: string): void {
     this.stepMatchOverviewData[keyToUpdate] = value;
   }
 
-  setGameData(value, dataManagerKey, stepDataKey) {
-    this.dataManager[dataManagerKey] = value;
+  setGameData(value: any, stepDataKey: string): void {
     this.populateData(value, stepDataKey);
     this.matchOverviewEmitter.emit(this.stepMatchOverviewData);
   }
 
-  updateScore(event, side) {
+  updateScore(event: any, side: string): void {
     let score = +event.target.value;
     if (score < 0 || score > 99) { score = 0 };
     if (score % 1 !== 0) { score = Math.floor(score) };
-    if (side === 'HOME') { this.setGameData(score, 'selectedScore', 'myScore') };
-    if (side === 'AWAY') { this.setGameData(score, 'selectedOpponentScore', 'opponentScore') };
-    event.target.value = score;
+    if (side === 'HOME') { this.setGameData(score, 'myScore') };
+    if (side === 'AWAY') { this.setGameData(score, 'opponentScore') };
   }
 
-  sendToTeamEvent(data) {
+  sendToTeamEvent(data: any) {
     this.matchOverviewEmitter.emit(data);
   }
 }

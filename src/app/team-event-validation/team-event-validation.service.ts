@@ -170,7 +170,7 @@ export class TeamEventValidationService {
 
 
   // Phases & subs methods =========================================================================================
-  getCurrentValitationData() {
+  getCurrentValitationData(): any {
     switch (this.getCurrentTeamEventType()) {
       case 1:
         // console.log('getCurrentValitationData: ', this.getTrainingValidationData(), this.currentTeamEventType)
@@ -182,90 +182,84 @@ export class TeamEventValidationService {
     }
   }
 
-  getPlayerById(playerId) {
+  getCurrentEventMetadata(): any {
+    return this.getCurrentValitationData().metadata || {};
+  }
+
+  getPlayerById(playerId: number): any {
     return this.getCurrentValitationData().participatingPlayers[playerId] || {};
   }
 
-  getPlayersByIds(playerIds, key?) {
+  getPlayersByIds(playerIds: number[], key?: string): any[] {
     return playerIds.map((playerId) => {
       return this.getPlayerById(key ? playerId[key] : playerId);
     })
   }
 
-  getPositionById(positionId) {
+  getPositionById(positionId: number): any {
     return this.getStaticData().positions[positionId];
   }
 
-  getAllParticipatingPlayers() {
+  getAllParticipatingPlayers(): any {
     // console.log('getCurrentValitationData: ', this.getCurrentValitationData(), this.getMatchValidationData());
     return this.getCurrentValitationData().participatingPlayers || {};
   }
 
-  setFormation() {
-    // console.log(this.getCurrentValitationData())
+  setFormation(): void {
     const participatingPlayers = this.getCurrentValitationData().participatingPlayers;
     this.lineup = this.getPlayersByIds(this.getCurrentValitationData().formation, 'playerId');
-    // this.availableForSub = { ...participatingPlayers };
-    // this.lineup.forEach((player) => {
-    //   const playerId = player.playerId;
-    //   if (participatingPlayers.hasOwnProperty(playerId) && participatingPlayers[playerId]) { delete this.availableForSub[playerId] };
-    // });
-
 
     this.availableForSub = Object.values(participatingPlayers).filter((player) => {
       return !this.isPlayerInLineup(player);
     });
   }
 
-  isPlayerInLineup(player) {
+  isPlayerInLineup(player: any): boolean {
     return this.lineup.some((lineupPlayer) => {
       return lineupPlayer.id === player.id;
     });
   }
 
-  isPlayerPartitpateInOverlapPhase(playerId, phaseToCheck) {
-    this.getCurrentValitationData().phases.phasesList.forEach((phase) => {
-      if (phase.id !== phaseToCheck.id && this.isTimeRangesOverlap(phaseToCheck, phase)) {
-        // return phase.lineup.some((player) => {
-        //   return player.playerId === playerId;
-        // });
-      }
+  isPhaseOverlap(phaseToCheck: any, overlapRange?: number): boolean {
+    return this.getAllPhases().some((phase) => {
+      return phase.id !== phaseToCheck.id && this.isTimeRangesOverlap(phaseToCheck, phase, overlapRange);
     });
   }
 
-  isTimeRangesOverlap(timescope1, timescope2) { // npm install --save moment-range
-    // return true;
-    const range = moment.range(timescope1.startTime, timescope1.endTime);
+  isTimeRangesOverlap(timescope1: any, timescope2: any, overlapRange: number = 0): boolean { // npm install --save moment-range
+    const start1: any = timescope1.startTime - overlapRange;
+    const end1: any = timescope1.endTime + overlapRange;
+    const range = moment.range(start1, end1);
     const range2 = moment.range(timescope2.startTime, timescope2.endTime);
     // console.log(range, range2, range.overlaps(range2))
     return range.overlaps(range2);
   }
 
-  getStaticData() {
+  getStaticData(): any{
     return this.staticDataService.getStaticData()
   }
 
-  getStaticPositionsList() {
+  getStaticPositionsList(): any[] {
     return objToArray(this.getStaticData().positions, 'id');
   }
 
-  getStaticCompetitionsList() {
+  getStaticCompetitionsList(): any[] {
     return objToArray(this.getStaticData().competitions, 'id');
   }
 
-  getStaticMatchPhasesList() {
+  getStaticMatchPhasesList(): any[] {
     return objToArray(this.getStaticData().matchPhases, 'id');
   }
 
-  getCompetitionNameById(id) {
+  getCompetitionNameById(id: number): any {
     return this.getStaticData().competitions[id];
   }
 
-  getAllPhases() {
-    return this.getCurrentValitationData().phases.phasesList;
+  getAllPhases(): any[] {
+    return this.getCurrentValitationData().phases.phasesList || [];
   }
 
-  getMatchDuraiton() {
+  getMatchDuraiton(): number {
     const matchDuraiton = this.getAllPhases().reduce((acc, phase) => {
       if (phase.subType !== 7) {
         acc += (phase.endTime - phase.startTime) / 60000;
@@ -276,13 +270,13 @@ export class TeamEventValidationService {
     return parseInt(matchDuraiton);
   }
 
-  checkIfAllSubsAreValid() {
+  checkIfAllSubsAreValid(): boolean {
     return this.getCurrentValitationData().substitutions.subList.every((sub) => {
       return !sub.errorMassage;
     });
   }
 
-  swapPlayerIdInSubstitutions(inPlayerId, outPlayerId) {
+  swapPlayerIdInSubstitutions(inPlayerId: number, outPlayerId: number): void {
     this.getMatchValidationData().substitutions.subList = this.getMatchValidationData().substitutions.subList.map((substitution) => {
       if (outPlayerId === substitution.inPlayerId) { substitution.inPlayerId = inPlayerId };
       if (outPlayerId === substitution.outPlayerId) { substitution.outPlayerId = inPlayerId };

@@ -8,23 +8,23 @@ import { TeamEventValidationService } from 'src/app/team-event-validation/team-e
 })
 export class SubstitutionsRowComponent implements OnInit {
 
-  @Input() substitution; // Substitution
-  @Input() rowConfig; // RowConfig
-  @Input() rowStyle; // RowStyle
+  @Input() substitution: any; // Substitution
+  @Input() rowConfig: any; // RowConfig
+  @Input() rowStyle: any; // RowStyle
   @Input() rowMode: string = 'GENERAL';
-  @Input() availableForSub; // Player[]
-  @Input() lineup; // Player[]
+  @Input() availableForSub: any; // Player[]
+  @Input() lineup: any; // Player[]
 
   @Output() removeRow = new EventEmitter();
   @Output() addRow = new EventEmitter();
   @Output() editRow = new EventEmitter();
   @Output() setSubsList = new EventEmitter();
 
-  substitutionDraft; // Substitution
+  substitutionDraft: any; // Substitution
 
   Object: ObjectConstructor = Object;
-  substitutionForDisplay; // Substitution
-  positions; // ?
+  substitutionForDisplay: any; // Substitution
+  positions: any; // ?
 
   constructor(private teamEventValidationService: TeamEventValidationService) {
   }
@@ -35,7 +35,7 @@ export class SubstitutionsRowComponent implements OnInit {
     this.positions = this.teamEventValidationService.getStaticPositionsList();
   }
 
-  setSubId(sub /* Substitution */): void {
+  setSubId(sub: any /* Substitution */): void {
     sub['subId'] = +`${Date.now()}${Math.round(Math.random()*1000)}`;
     this.substitutionDraft = { ...this.substitution };
   }
@@ -57,7 +57,7 @@ export class SubstitutionsRowComponent implements OnInit {
     }
   }
 
-  showPlayerNameByFormat(playerName: string) {
+  showPlayerNameByFormat(playerName: string): string {
     if (!playerName) { return };
     let nameByFormat: any = playerName.split(' ');
     if (!nameByFormat[0] || !nameByFormat[1]) { return };
@@ -85,7 +85,7 @@ export class SubstitutionsRowComponent implements OnInit {
     this.changeRowMode('GENERAL');
   }
 
-  changeRowMode(newMode): void {
+  changeRowMode(newMode: string): void {
     if (this.rowMode === 'NEW') { return };
     this.rowMode = newMode;
   }
@@ -115,7 +115,7 @@ export class SubstitutionsRowComponent implements OnInit {
     }
   };
 
-  isSubFull() {
+  isSubFull(): boolean {
     return this.substitutionDraft.timeMin && this.substitutionDraft.inPlayerId && this.substitutionDraft.outPlayerId && this.substitutionDraft.positionId;
   }
 

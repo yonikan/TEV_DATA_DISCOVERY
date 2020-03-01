@@ -29,14 +29,17 @@ export class StepMatchSubsComponent implements OnInit {
   checkIfSubsAreValid(event): void{
     this.isStepValid = event.isValid;
     if (event.isValid) {
-      this.onMatchSubsEmitter(event.substitutions);
+      this.onMatchSubsEmitter(event);
     }
   }
 
 	onMatchSubsEmitter(matchSubsData) {
-		// const matchData = this.teamEventValidationService.getMatchValidationData();
-		// let matchDataCopy = {...matchData};
-		// matchDataCopy.substitutions = matchSubsData;
-		// this.teamEventValidationService.setMatchValidationData(matchDataCopy);
+    console.log('matchSubsData: ', matchSubsData);
+		const matchData = this.teamEventValidationService.getMatchValidationData();
+		let matchDataCopy = {...matchData};
+		matchDataCopy.substitutions.subList = matchSubsData.substitutions;
+    matchDataCopy.substitutions.suggestedSubs = matchSubsData.suggestedSubs;
+    console.log('matchDataCopy: ', matchDataCopy);
+		this.teamEventValidationService.setMatchValidationData(matchDataCopy);
 	}
 }

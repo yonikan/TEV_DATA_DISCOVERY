@@ -20,60 +20,63 @@
             [checked]="(phaseToEdit.subType === 7 && option.subType === 7) || (phaseToEdit.subType !== 5 && !option.subType)"
           > <!-- [checked]="phaseToEdit.subType === option.subType" -->
 
-          <i class="demo-icon icon-soccer-ball" *ngIf="option.type === 5">&#xe826;</i> 
-          <i class="demo-icon icon-soccer-ball" *ngIf="option.type === 6">&#xe826;</i> 
+          <i class="demo-icon icon-calender" *ngIf="option.subType !== 7">&#xe816;</i>
+          <i class="demo-icon icon-runing" *ngIf="option.subType === 7">&#xe832;</i>
           {{ option.name }}
           </mat-radio-button>
         </mat-radio-group>
       </div>
       <div class="phase-duration">
-      <app-simple-time-picker
+        <app-simple-time-picker
         [propName]="'startTime'"
         [maxPropName]="'endTime'"
         [(range)]="phaseToEdit"
+  			[offset]="phaseToEdit.offset"
         (updateTime)="updateTime($event, 'startTime');setPhaseDurationTotal();">
       </app-simple-time-picker>
       <app-simple-time-picker
         [propName]="'endTime'"
         [maxPropName]="'startTime'"
         [(range)]="phaseToEdit"
+  			[offset]="phaseToEdit.offset"
         (updateTime)="updateTime($event, 'endTime');setPhaseDurationTotal();">
       </app-simple-time-picker>
-        <div class="phase-duration-total">({{ setPhaseDurationTotal() }})</div>
-      </div>
-      <mat-error *ngIf="durationError">{{durationError}}</mat-error>
+      <div class="phase-duration-total">({{ setPhaseDurationTotal() }})</div>
     </div>
-
-    <app-match-phase-modal
-      *ngIf="phaseToEdit.type === 5"
-      [phase]="data.phase"
-      [selectedLineup]="phaseToEdit.lineup || {}"
-      (updateField)="onUpdateField($event)"
-    ></app-match-phase-modal>
-
-    <app-warmup-modal
-      *ngIf="phaseToEdit.type === 4"
-      [phase]="data.phase"
-      [selectedLineup]="phaseToEdit.lineup || {}"
-      (updateField)="onUpdateField($event)"
-    ></app-warmup-modal>
-
-    <app-physical-modal
-      *ngIf="phaseToEdit.type === 1"
-      [phase]="data.phase"
-      [selectedLineup]="phaseToEdit.lineup || {}"
-      (updateField)="onUpdateField($event)"
-    ></app-physical-modal>
-
-    <app-technical-modal
-      *ngIf="phaseToEdit.type === 3"
-      [phase]="data.phase"
-      [selectedLineup]="phaseToEdit.lineup || {}"
-      (updateField)="onUpdateField($event)"
-    ></app-technical-modal>
   </div>
 
-  <div class="dialog-footer">
-    <button (click)="savePhase()"  class="dialog-footer" mat-raised-button>save phase</button>
-  </div>
+  <app-match-phase-modal
+  *ngIf="phaseToEdit.type === 5"
+  [phase]="data.phase"
+  [selectedLineup]="phaseToEdit.lineup || {}"
+  (updateField)="onUpdateField($event)"
+  ></app-match-phase-modal>
+
+  <app-warmup-modal
+  *ngIf="phaseToEdit.type === 4"
+  [phase]="data.phase"
+  [selectedLineup]="phaseToEdit.lineup || {}"
+  (updateField)="onUpdateField($event)"
+  ></app-warmup-modal>
+
+  <app-physical-modal
+  *ngIf="phaseToEdit.type === 1"
+  [phase]="data.phase"
+  [selectedLineup]="phaseToEdit.lineup || {}"
+  (updateField)="onUpdateField($event)"
+  ></app-physical-modal>
+
+  <app-technical-modal
+  *ngIf="phaseToEdit.type === 3"
+  [phase]="data.phase"
+  [selectedLineup]="phaseToEdit.lineup || {}"
+  (updateField)="onUpdateField($event)"
+  ></app-technical-modal>
+</div>
+
+<div class="dialog-footer">
+  <button (click)="savePhase()"  class="dialog-footer" mat-raised-button [disabled]="!!durationError||!!subTypeError">save phase</button>
+  <mat-error *ngIf="subTypeError">{{subTypeError}}</mat-error>
+  <mat-error *ngIf="durationError">{{durationError}}</mat-error>
+</div>
 </div>

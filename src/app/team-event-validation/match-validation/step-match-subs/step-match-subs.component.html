@@ -4,7 +4,7 @@
       <p>Match Duration - {{teamEventValidationService.getMatchDuraiton()}} min</p>
     </div>
 
-    <substitutions-table (matchSubsEmitter)="onMatchSubsEmitter($event)" (isAllSubsValid)="checkIfSubsAreValid($event);" [substitutions]="stepMatchSubsData?.subList" [suggestedSubs]="stepMatchSubsData?.suggestedSubs"></substitutions-table>
+    <substitutions-table (isAllSubsValid)="checkIfSubsAreValid($event);" [substitutions]="stepMatchSubsData?.subList" [suggestedSubs]="stepMatchSubsData?.suggestedSubs"></substitutions-table>
 
     <div class="step-footer">
         <button class="step-back-btn" mat-button (click)="previousStep()">back</button>
