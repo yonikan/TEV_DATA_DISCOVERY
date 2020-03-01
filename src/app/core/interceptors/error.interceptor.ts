@@ -32,6 +32,7 @@ export class ErrorInterceptor implements HttpInterceptor {
             // this.authService.logout();
           } else {
             modalMessage = 'An unknown error occurred!';
+
             if(error.status === 500) {
               modalTitle = 'Error 500';
             } else if (error.status === 400) {
@@ -55,14 +56,17 @@ export class ErrorInterceptor implements HttpInterceptor {
             } else {
               modalTitle = 'General Error';
             }
-            this.dialog.open(ErrorModalComponent, {
-              width: '500px',
-              height: '200px',
-              data: { 
-                title: modalTitle,
-                message: modalMessage
-              }
-            });
+
+            if (error.error.errorMessageId !== 'pmErrorLoginBadLoginDetails') {
+              this.dialog.open(ErrorModalComponent, {
+                width: '500px',
+                height: '200px',
+                data: { 
+                  title: modalTitle,
+                  message: modalMessage
+                }
+              });
+            }
           }
 
           return throwError(error);
