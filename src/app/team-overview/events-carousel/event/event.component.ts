@@ -45,9 +45,9 @@ export class EventComponent implements OnInit {
     if(this.eventData.type === 2 && this.eventData.phaseMinStartTime) {
       this.eventData.phaseMinStartTime = moment(this.eventData.phaseMinStartTime).add(offset, 'hours');
       this.eventData.phaseMaxEndTime = moment(this.eventData.phaseMaxEndTime).add(offset, 'hours');
-    } 
+    }
 
-    
+
     // duration ===============================================
     let duration;
     const startForDuration = moment(this.eventData.startTime);
@@ -89,7 +89,7 @@ export class EventComponent implements OnInit {
 
     let today = moment();
     let yesterday = moment().subtract(1, 'day');
-    
+
     if(moment(this.eventData.startTime).isSame(today, 'day')) {
       this.durationTimeAgo = 'Today';
     } else if (moment(this.eventData.startTime).isSame(yesterday, 'day')) {

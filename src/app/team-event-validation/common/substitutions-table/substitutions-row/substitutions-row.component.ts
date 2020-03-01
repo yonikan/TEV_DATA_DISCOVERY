@@ -57,7 +57,7 @@ export class SubstitutionsRowComponent implements OnInit {
     }
   }
 
-  showPlayerNameByFormat(playerName: string): void {
+  showPlayerNameByFormat(playerName: string) {
     if (!playerName) { return };
     let nameByFormat: any = playerName.split(' ');
     if (!nameByFormat[0] || !nameByFormat[1]) { return };
