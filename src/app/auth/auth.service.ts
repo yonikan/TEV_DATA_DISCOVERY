@@ -70,26 +70,44 @@ export class AuthService {
     // return of(LOGIN_DATA);
   }
 
+  // login old - DONT DELETE!
+  // login(email: string, password: string) {
+  //   this.fetchUserLoginData(email, password)
+  //     .subscribe(
+  //       (userLoginDataResponse: UserLogin) => {
+  //         if (userLoginDataResponse.token) {
+  //           this.userLoginData = userLoginDataResponse;
+  //           this.userLoginDataListener.next(userLoginDataResponse);
+  //           this.authorizationService.allowedFeatures = userLoginDataResponse.features;
+  //           this.token = userLoginDataResponse.token;
+  //           this.localStorageService.storeOnCookie('token', this.token);
+  //           this.isAuthenticated = true;
+  //           this.authStatusListener.next(true);
+  //           this.router.navigate(['/team-overview']);
+  //         }
+  //       },
+  //       (error) => {
+  //         this.isAuthenticated = false;
+  //         this.authStatusListener.next(false);
+  //       }
+  //     );
+  // }
+
   login(email: string, password: string) {
-    this.fetchUserLoginData(email, password)
-      .subscribe(
-        (userLoginDataResponse: UserLogin) => {
-          if (userLoginDataResponse.token) {
-            this.userLoginData = userLoginDataResponse;
-            this.userLoginDataListener.next(userLoginDataResponse);
-            this.authorizationService.allowedFeatures = userLoginDataResponse.features;
-            this.token = userLoginDataResponse.token;
-            this.localStorageService.storeOnCookie('token', this.token);
-            this.isAuthenticated = true;
-            this.authStatusListener.next(true);
-            this.router.navigate(['/team-overview']);
-          }
-        },
-        (error) => {
-          this.isAuthenticated = false;
-          this.authStatusListener.next(false);
-        }
-      );
+    return this.fetchUserLoginData(email, password);
+  }
+
+  loginResponseHandle(userLoginDataResponse: any) {
+    if (userLoginDataResponse.token) {
+      this.userLoginData = userLoginDataResponse;
+      this.userLoginDataListener.next(userLoginDataResponse);
+      this.authorizationService.allowedFeatures = userLoginDataResponse.features;
+      this.token = userLoginDataResponse.token;
+      this.localStorageService.storeOnCookie('token', this.token);
+      this.isAuthenticated = true;
+      this.authStatusListener.next(true);
+      this.router.navigate(['/team-overview']);
+    }
   }
 
   logout() {
