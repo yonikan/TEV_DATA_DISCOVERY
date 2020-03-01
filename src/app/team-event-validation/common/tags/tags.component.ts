@@ -1,32 +1,41 @@
-import { Component, OnInit, Output, EventEmitter, Input, ViewChild, ElementRef, OnChanges } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, ViewChild, ElementRef } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Observable } from 'rxjs';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material';
 import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-tags',
   templateUrl: './tags.component.html',
   styleUrls: ['./tags.component.scss']
 })
-export class TagsComponent implements OnInit, OnChanges {
-  @ViewChild('auto', {static: false}) matAutocomplete: MatAutocomplete;
-  @ViewChild('tagInput', {static: false}) tagInput: ElementRef<HTMLInputElement>;
+export class TagsComponent implements OnInit {
   @Input() stepData: any;
   @Input() teamEventType: number;
   @Output() tagsEmitter = new EventEmitter<any>();
-  tagCtrl = new FormControl();
+
   visible = true;
   selectable = true;
   removable = true;
-  addOnBlur = false;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  teamEventTagCtrl = new FormControl();
+  filteredTeamEventTags: Observable<string[]>;
   teamEventTags: any[] = [];
-  filteredTags: Observable<string[]>;
+  allTeamEventTags: string[] = [];
   teamEventTypeString: string;
 
-  constructor() {}
+  @ViewChild('teamEventTagsInput', {static: false}) teamEventTagsInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto', {static: false}) matAutocomplete: MatAutocomplete;
+
+  constructor() {
+    this.filteredTeamEventTags = this.teamEventTagCtrl.valueChanges
+      .pipe(
+        startWith(null),
+        map((teamEventTag: string | null) => teamEventTag ? this._filter(teamEventTag) : this.allTeamEventTags.slice())
+      );
+  }
 
   ngOnInit() {
     if (this.teamEventType === 1){
@@ -42,23 +51,15 @@ export class TagsComponent implements OnInit, OnChanges {
         this.teamEventTags.push({name: tag})
       });
     }
-  }
 
-  ngOnChanges(change) {
-    if (change.stepData && this.stepData) {
-      this.filteredTags = this.tagCtrl.valueChanges
-      .pipe(
-        startWith(null),
-        map((tag: string | null) => {
-          return tag ? this._filter(tag) : this.stepData.availableTagsList.slice();
-        }));
+    if(this.stepData.availableTagsList && this.stepData.availableTagsList.length > 0) {
+      this.stepData.availableTagsList.forEach(tag => {
+        this.allTeamEventTags.push(tag);
+      });
     }
   }
 
-  add(event): void {
-    if (this.matAutocomplete.isOpen) {
-      return
-    };
+  add(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
 
@@ -71,13 +72,9 @@ export class TagsComponent implements OnInit, OnChanges {
     if (input) {
       input.value = '';
     }
-    this.sendToTeamEvent(this.teamEventTags);
-  }
 
-  selected(event: MatAutocompleteSelectedEvent): void {
-    this.teamEventTags.push({name: event.option.viewValue});
-    this.tagInput.nativeElement.value = '';
-    this.tagCtrl.setValue(null);
+    this.teamEventTagCtrl.setValue(null);
+    this.sendToTeamEvent(this.teamEventTags);
   }
 
   remove(teamEventTag: any): void {
@@ -88,12 +85,18 @@ export class TagsComponent implements OnInit, OnChanges {
     this.sendToTeamEvent(this.teamEventTags);
   }
 
-  sendToTeamEvent(tags) {
-    this.tagsEmitter.emit(tags);
+  selected(event: MatAutocompleteSelectedEvent): void {
+    this.teamEventTags.push({name: event.option.viewValue});
+    this.teamEventTagsInput.nativeElement.value = '';
+    this.teamEventTagCtrl.setValue(null);
   }
 
-  _filter(value: string): string[] {
+  private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
-    return this.stepData.availableTagsList.filter(option => option.toLowerCase().includes(filterValue));
+    return this.allTeamEventTags.filter(teamEventTag => teamEventTag.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  sendToTeamEvent(tags) {
+    this.tagsEmitter.emit(tags);
   }
 }

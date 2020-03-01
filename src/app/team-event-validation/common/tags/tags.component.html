@@ -4,6 +4,39 @@
     <p>Add {{ teamEventTypeString }} tags or select existing one from the list below.</p>
   </div>
   <mat-form-field class="example-chip-list" appearance="outline">
+          <mat-chip-list #chipList>
+            <mat-chip *ngFor="let teamEventTag of teamEventTags" [selectable]="selectable" [removable]="removable" (removed)="remove(teamEventTag)">
+              {{teamEventTag.name}} <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+            <input placeholder="Enter Tags..."
+
+                   #teamEventTagsInput
+                   [formControl]="teamEventTagCtrl"
+                   [matAutocomplete]="auto"
+
+                   [matChipInputFor]="chipList"
+                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                   (matChipInputTokenEnd)="add($event)">
+          </mat-chip-list>
+  </mat-form-field>
+
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+    <mat-option *ngFor="let teamEventTag of filteredTeamEventTags | async" [value]="teamEventTag">
+      {{teamEventTag}}
+    </mat-option>
+  </mat-autocomplete>
+
+</div>
+
+
+
+
+<!-- <div class="tags-container">
+  <div class="title">
+    <h3>{{ teamEventTypeString }} theme</h3>
+    <p>Add {{ teamEventTypeString }} tags or select existing one from the list below.</p>
+  </div>
+  <mat-form-field class="example-chip-list" appearance="outline">
           <mat-chip-list #chipList aria-label="Fruit selection">
             <mat-chip *ngFor="let teamEventTag of teamEventTags" [selectable]="selectable" [removable]="removable" (removed)="remove(teamEventTag)">
               {{ teamEventTag.name }} <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
@@ -24,4 +57,36 @@
             </mat-option>
           </mat-autocomplete>
   </mat-form-field>
-</div>
+</div> -->
+
+
+
+
+
+<!-- <div class="tags-container">
+  <div class="title">
+    <h3>{{ teamEventTypeString }} theme</h3>
+    <p>Add {{ teamEventTypeString }} tags or select existing one from the list below.</p>
+  </div>
+  <mat-form-field class="example-chip-list" appearance="outline">
+          <mat-chip-list #chipList aria-label="Fruit selection">
+            <mat-chip *ngFor="let teamEventTag of teamEventTags" [selectable]="selectable" [removable]="removable" (removed)="remove(teamEventTag)">
+              {{ teamEventTag.name }} <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+            <input placeholder="Enter / Add Tags"
+                   appRestrictLanguages
+                   [matChipInputFor]="chipList"
+                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                   [matChipInputAddOnBlur]="addOnBlur"
+                   (matChipInputTokenEnd)="add($event)"
+                   [matAutocomplete]="auto"
+                   [formControl]="tagCtrl"
+                   #tagInput>
+          </mat-chip-list>
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+            <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+              {{ tag }}
+            </mat-option>
+          </mat-autocomplete>
+  </mat-form-field>
+</div> -->
