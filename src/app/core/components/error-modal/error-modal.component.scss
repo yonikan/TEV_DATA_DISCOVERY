@@ -5,8 +5,13 @@
   text-align: center;
   @include modal;
 
-  .icon-error-icon {
-    margin-right: 10px;
-    color: $color-pink;
+  .header-title {
+    display: flex;
+    align-items: center;
+
+    .icon-error-icon {
+      margin-right: 10px;
+      color: $color-pink;
+    }
   }
 }

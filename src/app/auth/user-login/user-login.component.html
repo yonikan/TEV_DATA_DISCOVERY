@@ -21,6 +21,9 @@
                     (userLoginFormGroup.get('emailText').invalid || userLoginFormGroup.get('passwordText').invalid)">
                     {{ 'auth.general.incorrect-email-and/or-password' | translate }}
             </mat-error>
+            <mat-error *ngIf="!isPasswordCorrect && isPasswordCorrect !== undefined">
+                incorect password
+            </mat-error>
             
             <button color="accent" [disabled]="!userLoginFormGroup.valid" class="login-button" *ngIf="!isLoading" type="submit" mat-raised-button>
                 login

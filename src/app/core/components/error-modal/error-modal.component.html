@@ -3,14 +3,16 @@
         <button mat-icon-button>
             <i class="demo-icon icon-x" (click)="onCancel()">&#xe828;</i>
         </button>
-        <i class="demo-icon icon-error-icon">&#xe80b;</i> 
-        <h2>{{ data.title }}</h2>
+        <span class="header-title">
+            <i class="demo-icon icon-error-icon">&#xe80b;</i> 
+            <h2>{{ data.title }}</h2>
+        </span>
         <span></span>
     </div>
   
     <div class="dialog-content">
-        <!-- <p class="mat-body-1">{{ data.message }}</p> -->
-        <p class="mat-body-1">The files you requested could not be exported. Please try again later or <a>contact support</a>.</p>
+        <p class="mat-body-1">{{ data.message }}</p>
+        <!-- <p class="mat-body-1">The files you requested could not be exported. Please try again later or <a>contact support</a>.</p> -->
     </div>
   
     <div class="dialog-footer">
