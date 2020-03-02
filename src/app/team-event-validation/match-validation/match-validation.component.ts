@@ -1,8 +1,9 @@
 import { Component, OnInit, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { TeamEventValidationService } from '../team-event-validation.service';
 import { UiComponentsService } from '../../core/services/ui-components.service';
 import { TeamOverviewService } from '../../team-overview/team-overview.service';
+import { StaticDataService } from 'src/app/core/services/static-data.service';
 
 @Component({
 	selector: 'app-match-validation',
@@ -38,14 +39,17 @@ export class MatchValidationComponent implements OnInit, OnDestroy {
 		3: true,
 		4: true,
 	}
+	positions: Observable<any>;
 
 	constructor(
 		private teamEventValidationService: TeamEventValidationService,
 		private teamOverviewService: TeamOverviewService,
-		private uiComponentsService: UiComponentsService
+		private uiComponentsService: UiComponentsService,
+		private staticDataService: StaticDataService
 	) { }
 
 	ngOnInit() {
+		this.positions = this.staticDataService.getData('positions', 'team-event-validation');
 		this.teamEventValidationService.fetchMatch(this.matchId);
 		this.matchValidationDataSub = this.teamEventValidationService
 			.getMatchValidationDataListener()
