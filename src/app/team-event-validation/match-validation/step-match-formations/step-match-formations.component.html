@@ -8,7 +8,7 @@
 			<app-formation-selection
 				[positions]="positions"
                 [tabs]="playersData"
-                [tactics]="tactics"
+                [tactics]="tactics | async"
 				[definedSubs]="definedSubs"
                 (formationSelectionEmitter)="onFormationSelectionEmitter($event)"
                 (onSelectTactic)="selectTactic($event)"
