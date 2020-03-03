@@ -22,9 +22,10 @@
 				(stepSelectionEmitter)="onStepSelectionEmitter($event, step, stepper)">
 			</app-step-match-players>
 			<app-step-match-formations
-				*ngIf="step.name === 'FORMATIONS' && step3Data?.formation"
+				*ngIf="step.name === 'FORMATIONS' && step3Data?.formation && currentStep === 2"
 				(onValidate)="validateStep($event, 2)"
 				[stepMatchFormationsData]="step3Data"
+				[positions]="positions | async"
 				(stepSelectionEmitter)="onStepSelectionEmitter($event, step, stepper)">
 			</app-step-match-formations>
 			<app-step-match-phases

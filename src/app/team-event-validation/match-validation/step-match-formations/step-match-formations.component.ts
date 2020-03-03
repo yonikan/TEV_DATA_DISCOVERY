@@ -19,6 +19,7 @@ const players = [
 })
 export class StepMatchFormationsComponent implements OnInit, OnChanges {
 	@Input() stepMatchFormationsData: any;
+	@Input() positions = [];
 	@Output() stepSelectionEmitter = new EventEmitter<number>();
 	@Output() onValidate = new EventEmitter<boolean>();
 
@@ -32,7 +33,6 @@ export class StepMatchFormationsComponent implements OnInit, OnChanges {
 	];
 
 	selectedFormation = {};
-	positions: any;
 	formationData: any = [];
 	participatingPlayers:any = [];
 	isValidated = true;
@@ -45,29 +45,28 @@ export class StepMatchFormationsComponent implements OnInit, OnChanges {
 
 
 	ngOnInit() {
-		this.positions = this.staticDataService.getStaticData().positions;
-		this.staticDataService.getData('formations', 'team-event-validation').subscribe(data => {
-			this.tactics = data;
-		})
+		this.tactics = this.staticDataService.getData('formations', 'team-event-validation');
 	}
 
 	ngOnChanges() {
 		this.participatingPlayers = this.stepMatchFormationsData.participatingPlayers;
 		this.formationData = this.stepMatchFormationsData.formation;
-		this.playersData = Object.values(this.stepMatchFormationsData.participatingPlayers)
-		.reduce((acc: any, val: any) => {
-			if (!val.isParticipated) {
-				return acc;
-			}
-			const position = this.positions[val.defaultPositionId];
-			const categoryPlayers = acc.find(v => v.category === position.category);
-			if (!categoryPlayers) {
-				acc = [...acc, {category: position.category, players: [val]}];
-			} else {
-				categoryPlayers.players = [...categoryPlayers.players, val]
-			}
-			return acc
-		}, []);
+		if (this.positions) {
+			this.playersData = Object.values(this.stepMatchFormationsData.participatingPlayers)
+				.reduce((acc: any, val: any) => {
+					if (!val.isParticipated) {
+						return acc;
+					}
+					const position = this.positions[val.defaultPositionId];
+					const categoryPlayers = acc.find(v => v.category === position.category);
+					if (!categoryPlayers) {
+						acc = [...acc, {category: position.category, players: [val]}];
+					} else {
+						categoryPlayers.players = [...categoryPlayers.players, val]
+					}
+					return acc
+				}, []);
+		}
 	}
 
 	selectTactic(tacticFormation) {
