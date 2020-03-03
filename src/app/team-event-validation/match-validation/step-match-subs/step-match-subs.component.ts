@@ -9,8 +9,8 @@ import { TeamEventValidationService } from '../../team-event-validation.service'
 export class StepMatchSubsComponent implements OnInit {
 	@Input() stepMatchSubsData: any; // Substitution[]
   @Output() stepSelectionEmitter = new EventEmitter<number>();
+	@Output() onValidate = new EventEmitter<boolean>();
 
-  isStepValid: boolean;
 
 	constructor(public teamEventValidationService: TeamEventValidationService) { }
 
@@ -27,7 +27,7 @@ export class StepMatchSubsComponent implements OnInit {
   }
 
   checkIfSubsAreValid(event): void{
-    this.isStepValid = event.isValid;
+		this.onValidate.emit(event.isValid);
     if (event.isValid) {
       this.onMatchSubsEmitter(event);
     }

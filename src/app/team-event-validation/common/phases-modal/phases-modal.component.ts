@@ -120,9 +120,6 @@ export class PhasesModalComponent implements OnInit {
   }
 
   savePhase(): void {
-    // TODO: check restrictions before saving
-    // TODO: replce phaseToEdit with original phase
-    console.log('saving phase', this.phaseToEdit)
     this.close(this.phaseToEdit);
   }
 

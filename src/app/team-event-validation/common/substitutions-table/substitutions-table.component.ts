@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { objToArray, sortFunction } from '../../../core/helpers/helper-functions';
 import { TeamEventValidationService } from '../../team-event-validation.service';
 
@@ -7,7 +7,7 @@ import { TeamEventValidationService } from '../../team-event-validation.service'
   templateUrl: './substitutions-table.component.html',
   styleUrls: ['./substitutions-table.component.scss']
 })
-export class SubstitutionsTableComponent implements OnInit, OnChanges {
+export class SubstitutionsTableComponent implements OnInit {
 
   tableSizeConfig: any = { // TableSizeConfig
     Minute: '9%',
@@ -31,16 +31,15 @@ export class SubstitutionsTableComponent implements OnInit, OnChanges {
   constructor(private teamEventValidationService: TeamEventValidationService, private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
+    if (!this.subFormationPerMinute[0]) { this.initSubFormationByMinute(); };
+    this.setSubstitutions();
   }
 
-  ngOnChanges(change): void {
-    if (!this.subFormationPerMinute[0]) { this.initSubFormationByMinute(); };
-    if (this.substitutions && change.substitutions && this.subFormationPerMinute[0]) {
-      this.sortSubstitutions();
-      this.buildSubFormationForAllSubs();
-      // this.validateAllSubs(); // fix + check if suggestedSubs should trigger the onChanges()
-      this.cd.detectChanges();
-    }
+  setSubstitutions() {
+    this.sortSubstitutions();
+    this.buildSubFormationForAllSubs();
+    this.validateAllSubs(); // fix + check if suggestedSubs should trigger the onChanges()
+    this.cd.detectChanges();
   }
 
   initSubFormationByMinute(): void {
@@ -49,7 +48,6 @@ export class SubstitutionsTableComponent implements OnInit, OnChanges {
       availableForSub: this.teamEventValidationService.availableForSub
     };
     this.buildSubFormationForAllSubs();
-    this.ngOnChanges({ substitutions: this.substitutions });
   }
 
   buildSubFormationForAllSubs(): void {
@@ -69,19 +67,19 @@ export class SubstitutionsTableComponent implements OnInit, OnChanges {
     const substitutionIndex = selectSubsList.findIndex(substitution => substitution.subId === substitutionToRemove.subId);
     selectSubsList.splice(substitutionIndex, 1);
     delete this.subFormationPerMinute[substitutionToRemove.timeMin];
-    this.ngOnChanges({ substitutions: this.substitutions });
+    this.setSubstitutions();
   }
 
   addRow(substitutionToAdd: any /* Substitution */): void {
     this.substitutions.push(substitutionToAdd);
-    this.ngOnChanges({ substitutions: this.substitutions });
+    this.setSubstitutions();
   }
 
   editRow(substitutionToEdit: any /* Substitution */): void {
     const substitutionIndex = this.substitutions.findIndex(substitution => substitution.subId === substitutionToEdit.subId);
     if (substitutionIndex !== -1) {
       this.substitutions[substitutionIndex] = substitutionToEdit;
-      this.ngOnChanges({ substitutions: this.substitutions });
+      this.setSubstitutions();
     }
   }
 
