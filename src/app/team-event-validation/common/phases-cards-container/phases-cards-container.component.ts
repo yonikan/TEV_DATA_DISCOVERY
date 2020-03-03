@@ -52,12 +52,16 @@ export class PhasesCardsContainerComponent implements OnInit {
   }
 
   getPhaseName(phase, index) {
-    if (phase.subType === 7) { return };
-    index = this.cards[0].subType !== 7 ? index : (index - 1);
+    const phaseName = this.getMatchPhaseNameById(phase.subType);
+    if (phaseName === 'warmUp') { return };
+    index = this.getMatchPhaseNameById(this.cards[0].subType) !== 'warmUp' ? index : (index - 1);
     const currentMatchPhaseObj = this.teamEventValidationService.getStaticMatchPhasesList()[index];
     return currentMatchPhaseObj.name;
   }
 
+  getMatchPhaseNameById(id) {
+    return this.teamEventValidationService.getMatchPhaseNameById(id);
+  }
 
   addEmptyCard(): void {
     this.cards = [

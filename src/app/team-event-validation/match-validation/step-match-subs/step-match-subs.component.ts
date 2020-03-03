@@ -34,12 +34,10 @@ export class StepMatchSubsComponent implements OnInit {
   }
 
 	onMatchSubsEmitter(matchSubsData) {
-    console.log('matchSubsData: ', matchSubsData);
 		const matchData = this.teamEventValidationService.getMatchValidationData();
 		let matchDataCopy = {...matchData};
 		matchDataCopy.substitutions.subList = matchSubsData.substitutions;
     matchDataCopy.substitutions.suggestedSubs = matchSubsData.suggestedSubs;
-    console.log('matchDataCopy: ', matchDataCopy);
 		this.teamEventValidationService.setMatchValidationData(matchDataCopy);
 	}
 }

@@ -8,6 +8,7 @@ import { StaticDataService } from '../core/services/static-data.service';
 import * as Moment from 'moment';
 import { extendMoment } from 'moment-range';
 import { objToArray } from '../core/helpers/helper-functions';
+import { MILLISECONDS_MINUTE } from 'src/app/app.consts';
 
 const moment = extendMoment(Moment);
 @Injectable({
@@ -173,11 +174,9 @@ export class TeamEventValidationService {
   getCurrentValitationData(): any {
     switch (this.getCurrentTeamEventType()) {
       case 1:
-        // console.log('getCurrentValitationData: ', this.getTrainingValidationData(), this.currentTeamEventType)
         return this.getTrainingValidationData();
 
       case 2:
-        // console.log('getCurrentValitationData: ', this.getMatchValidationData(), this.currentTeamEventType)
         return this.getMatchValidationData();
     }
   }
@@ -201,7 +200,6 @@ export class TeamEventValidationService {
   }
 
   getAllParticipatingPlayers(): any {
-    // console.log('getCurrentValitationData: ', this.getCurrentValitationData(), this.getMatchValidationData());
     return this.getCurrentValitationData().participatingPlayers || {};
   }
 
@@ -222,7 +220,7 @@ export class TeamEventValidationService {
 
   isPhaseOverlap(phaseToCheck: any, overlapRange?: number): boolean {
     return this.getAllPhases().some((phase) => {
-      return phase.id !== phaseToCheck.id && this.isTimeRangesOverlap(phaseToCheck, phase, overlapRange);
+      return phaseToCheck.id !== phase.id && this.isTimeRangesOverlap(phaseToCheck, phase, overlapRange);
     });
   }
 
@@ -231,7 +229,6 @@ export class TeamEventValidationService {
     const end1: any = timescope1.endTime + overlapRange;
     const range = moment.range(start1, end1);
     const range2 = moment.range(timescope2.startTime, timescope2.endTime);
-    // console.log(range, range2, range.overlaps(range2))
     return range.overlaps(range2);
   }
 
@@ -251,8 +248,18 @@ export class TeamEventValidationService {
     return objToArray(this.getStaticData().matchPhases, 'id');
   }
 
-  getCompetitionNameById(id: number): any {
-    return this.getStaticData().competitions[id];
+  getCompetitionNameById(id: number): string {
+    const currentCompetition = this.getStaticData().competitions[id];
+    if (currentCompetition) {
+      return currentCompetition.name;
+    }
+  }
+
+  getMatchPhaseNameById(id: number): string {
+    const currentMatchPhase = this.getStaticData().matchPhases[id];
+    if (currentMatchPhase) {
+      return currentMatchPhase.name;
+    }
   }
 
   getAllPhases(): any[] {
@@ -261,8 +268,8 @@ export class TeamEventValidationService {
 
   getMatchDuraiton(): number {
     const matchDuraiton = this.getAllPhases().reduce((acc, phase) => {
-      if (phase.subType !== 7) {
-        acc += (phase.endTime - phase.startTime) / 60000;
+      if (this.getMatchPhaseNameById(phase.subType) !== 'warmUp') {
+        acc += (phase.endTime - phase.startTime) / MILLISECONDS_MINUTE;
       }
       return acc;
     }, 0);

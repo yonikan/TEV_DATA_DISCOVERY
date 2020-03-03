@@ -14,8 +14,8 @@
     </button>
   </mat-menu>
 
-  <i class="demo-icon icon-calender  card-icon" *ngIf="phase.subType !== 7">&#xe816;</i>
-  <i class="demo-icon icon-runing  card-icon" *ngIf="phase.subType === 7">&#xe832;</i>
+  <i class="demo-icon icon-calender  card-icon" *ngIf="getMatchPhaseNameById(phase.subType) !== 'warmUp'">&#xe816;</i>
+  <i class="demo-icon icon-runing  card-icon" *ngIf="getMatchPhaseNameById(phase.subType) === 'warmUp'">&#xe832;</i>
 
   <div class="card-title">
     {{ translatePhaseName(phase.subType) }}
@@ -27,7 +27,7 @@
 
   <div class="card-options">
 
-    <div class="card-option" *ngIf="mode === 'MATCH' && phase.subType !== 7">
+    <div class="card-option" *ngIf="mode === 'MATCH' && getMatchPhaseNameById(phase.subType) !== 'warmUp'">
       <!-- <div class="card-option" *ngFor="let option of phase.options"> -->
       <!-- <div class="card-option-key">{{ option.key }}</div>
             <div class="card-option-value" *ngIf="option.value">

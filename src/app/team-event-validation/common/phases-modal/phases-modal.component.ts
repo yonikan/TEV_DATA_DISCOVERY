@@ -2,7 +2,7 @@ import { TeamEventValidationService } from 'src/app/team-event-validation/team-e
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import * as moment from 'moment';
-
+import { MILLISECONDS_MINUTE, MIN_WARMUP_PHASE_DURATION_MINUTES, MIN_MATCH_PHASE_DURATION_MINUTES } from 'src/app/app.consts';
 @Component({
   selector: 'phases-modal',
   templateUrl: './phases-modal.component.html',
@@ -46,8 +46,13 @@ export class PhasesModalComponent implements OnInit {
     return this.phaseDurationTotal;
   }
 
+  getMatchPhaseNameById(id) {
+    return this.teamEventValidationService.getMatchPhaseNameById(id);
+  }
+
   onUpdateField({ value, filedPathToUpdate }: {value: any, filedPathToUpdate: string[]}): void {
-    this.phaseToEdit[filedPathToUpdate[0]] = value; // TODO: add generic array logic;
+    // filedPathToUpdate is set as array for hundling nested values inside phaseToEdit in the feuture;
+    this.phaseToEdit[filedPathToUpdate[0]] = value;
     this.validateSubtype();
     this.validateDuration();
   }
@@ -55,13 +60,13 @@ export class PhasesModalComponent implements OnInit {
   validateSubtype(): void {
     let errorMassage = '';
 
-    // if 6 match phases => subType === 7;
+    // Can be a total of 6 match phases per game
     const matchPhaseCount = this.teamEventValidationService.getAllPhases().reduce((acc, phase) => {
-      if (phase.subType !== 7) { acc++ };
+      if (this.getMatchPhaseNameById(phase.subType) !== 'warmUp') { acc++ };
       return acc;
     }, 0);
 
-    if (this.phaseToEdit.subType !== 7 && matchPhaseCount > 6) {
+    if (this.getMatchPhaseNameById(this.phaseToEdit.subType) !== 'warmUp' && matchPhaseCount > 6) {
       errorMassage += 'Can be a total of 6 match phases per game, ';
     }
 
@@ -77,41 +82,41 @@ export class PhasesModalComponent implements OnInit {
     const diff = this.getTimeDiff(this.phaseToEdit.endTime, this.phaseToEdit.startTime);
     let errorMassage = '';
 
+    // phase duration is required for saving a phase;
+    if (!this.phaseToEdit.startTime || !this.phaseToEdit.endTime) {
+      errorMassage += 'phase duration is required for saving a phase, ';
+    }
+
     // if subType === 7 => start time is first||last;
-    if (this.phaseToEdit.subType === 7 && (this.data.index === 1 || this.data.index === this.data.phasesCount)) {
+    if (this.getMatchPhaseNameById(this.phaseToEdit.subType) === 'warmUp' && (this.data.index === 1 || this.data.index === this.data.phasesCount)) {
       errorMassage += 'Warmup phase can only be the first or last phase of a match event, ';
     }
 
     // if subType === 7 => endTime - startTime >= 5min; ”warmup should be longer than 5 min”
-    if (this.phaseToEdit.subType === 7 && diff < 5) {
+    if (this.getMatchPhaseNameById(this.phaseToEdit.subType) === 'warmUp' && diff < MIN_WARMUP_PHASE_DURATION_MINUTES) {
       errorMassage += 'warmup should be longer than 5 min, ';
     }
 
-    // if subType === 7 => time in timeFrame;
+    // check phase start and end time is in the event timeFrame;
     if (this.phaseToEdit.startTime < this.teamEventValidationService.getCurrentEventMetadata().startTime || this.phaseToEdit.endTime > this.teamEventValidationService.getCurrentEventMetadata().endTime) {
       errorMassage += 'Phase time should be in the event timeframe, ';
     }
 
     // if subType !== 7 => endTime - startTime >= 10min; "match phase should be longer than 10 min"
-    if (this.phaseToEdit.subType !== 7 && diff < 10) {
+    if (this.getMatchPhaseNameById(this.phaseToEdit.subType) !== 'warmUp' && diff < MIN_MATCH_PHASE_DURATION_MINUTES) {
       errorMassage += 'match phase should be longer than 10 min, ';
     }
 
     // match phases can overlap in total of 1 min only; “Match phases cannot overlap”
-    if (this.teamEventValidationService.isPhaseOverlap(this.phaseToEdit, 60000)) {
+    if (this.getMatchPhaseNameById(this.phaseToEdit.subType) !== 'warmUp' && this.teamEventValidationService.isPhaseOverlap(this.phaseToEdit, MILLISECONDS_MINUTE)) {
       errorMassage += 'Match phases cannot overlap, ';
-    }
-
-    // phase duration is required for saving a phase;
-    if (!this.phaseToEdit.startTime || !this.phaseToEdit.endTime) {
-      errorMassage += 'phase duration is required for saving a phase, ';
     }
 
     this.durationError = errorMassage.substring(0, errorMassage.length - 2);
   }
 
   getTimeDiff(endTime: number, startTime: number): number {
-    return Math.round((endTime - startTime) / 60000)
+    return Math.round((endTime - startTime) / MILLISECONDS_MINUTE)
   }
 
   savePhase(): void {

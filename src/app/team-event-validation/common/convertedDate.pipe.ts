@@ -9,7 +9,6 @@ export class ConvertedDatePipe extends DatePipe implements PipeTransform {
 
   transform(value: string | Date, format: string = 'mediumDate', offset: string = ''): string {
     const timezoneOffset = moment(value).utcOffset(+offset).format('Z');
-    console.log(value, format, timezoneOffset);
     return super.transform(value, format, timezoneOffset);
   }
 

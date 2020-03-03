@@ -5,9 +5,9 @@ import { PhasesModalComponent } from '../../../common/phases-modal/phases-modal.
 // import moment = require('moment');
 import * as moment from 'moment';
 import { enumToString } from '../../../../core/helpers/helper-functions';
-import { TrainingDrills } from '../../../../core/enums/training-drills.enum'
+import { TrainingDrills } from '../../../../core/enums/training-drills.enum';
 import { TeamEventValidationService } from 'src/app/team-event-validation/team-event-validation.service';
-
+import { MILLISECONDS_MINUTE } from 'src/app/app.consts';
 @Component({
   selector: 'app-phases-card',
   templateUrl: './phases-card.component.html',
@@ -39,7 +39,7 @@ export class PhasesCardComponent implements OnInit {
   }
 
   getTimeByFormat(startTime: number, endTime: number, offset?: number): string {
-    const diff = Math.round((endTime - startTime) / 60000);
+    const diff = Math.round((endTime - startTime) / MILLISECONDS_MINUTE);
     const start = moment(startTime).utcOffset(+offset).format('hh:mm');
     const end = moment(endTime).utcOffset(+offset).format('hh:mm');
     return `${start} - ${end} (${diff} min) - phase ${this.index + 1}/${this.phasesCount}`;
@@ -47,6 +47,10 @@ export class PhasesCardComponent implements OnInit {
 
   hundleEllipsisAction(ellipsisOption: any): void { // EllipsisOption
     this[ellipsisOption.action]();
+  }
+
+  getMatchPhaseNameById(id) {
+    return this.teamEventValidationService.getMatchPhaseNameById(id);
   }
 
   onDeleteCard(): void {

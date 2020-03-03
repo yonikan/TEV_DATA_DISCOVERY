@@ -7,7 +7,7 @@
   <!-- .add(stepMatchOverviewData.offset, 'hours') -->
 
   <button mat-button [matMenuTriggerFor]="menu" class="match-competition dropdown-btn">
-    {{ teamEventValidationService.getCompetitionNameById(stepMatchOverviewData.competition)?.name || 'Competition' }}
+    {{ teamEventValidationService.getCompetitionNameById(stepMatchOverviewData.competition) || 'Competition' }}
     <i class="demo-icon icon-icon-open-single">&#xe803;</i>
   </button>
 
