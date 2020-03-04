@@ -85,3 +85,40 @@ mat-error {
   /* Uncomment for 3D effect */
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
+
+
+.mat-tab-header {
+  // border-bottom: none;
+  // border-bottom: 8px solid #35083a;
+  // border-bottom: 8px solid #6a4e6d;
+  // opacity: 0.3;
+
+    border-bottom: 1px solid #35083a;
+}
+
+.mat-tab-body-wrapper  {
+  margin-top: 55px;
+}
+
+.mat-tab-label-active {
+  // opacity: 1 !important;
+
+  border-bottom: 8px solid #35083a;
+}
+
+.mat-tab-label {
+// opacity: 1 !important;
+
+  border-bottom: 8px solid #dde7ee;
+  padding: 0 42px !important;
+}
+
+.mat-tab-group.mat-primary .mat-ink-bar,.mat-tab-nav-bar.mat-primary .mat-ink-bar {
+  background-color: #35083a;
+  height: 8px;
+}
+
+.mat-tab-label-content {
+  font-size: 20px;
+  color: #3d4762;
+} 
