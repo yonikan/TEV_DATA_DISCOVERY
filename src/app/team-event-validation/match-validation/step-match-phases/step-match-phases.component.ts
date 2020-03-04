@@ -46,7 +46,6 @@ export class StepMatchPhasesComponent implements OnInit, OnChanges {
     this.stepMatchPhasesData.phases = updatedPhases;
     //TODO: replace in step data
 
-		console.log('matchPhasesData: ', updatedPhases);
 		// const matchData = this.teamEventValidationService.getMatchValidationData();
 		// let matchDataCopy = {...matchData};
 		// matchDataCopy.phases = matchPhasesData;
