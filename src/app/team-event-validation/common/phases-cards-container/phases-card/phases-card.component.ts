@@ -8,6 +8,7 @@ import { enumToString } from '../../../../core/helpers/helper-functions';
 import { TrainingDrills } from '../../../../core/enums/training-drills.enum';
 import { TeamEventValidationService } from 'src/app/team-event-validation/team-event-validation.service';
 import { MILLISECONDS_MINUTE } from 'src/app/app.consts';
+import { ConvertedDatePipe } from '../../convertedDate.pipe';
 @Component({
   selector: 'app-phases-card',
   templateUrl: './phases-card.component.html',
@@ -29,7 +30,7 @@ export class PhasesCardComponent implements OnInit {
   ];
 
 
-  constructor(private dialog: MatDialog, public teamEventValidationService: TeamEventValidationService) { }
+  constructor(private dialog: MatDialog, public teamEventValidationService: TeamEventValidationService, private convertedDatePipe: ConvertedDatePipe) { }
 
   ngOnInit() {
   }
@@ -40,8 +41,8 @@ export class PhasesCardComponent implements OnInit {
 
   getTimeByFormat(startTime: number, endTime: number, offset?: number): string {
     const diff = Math.round((endTime - startTime) / MILLISECONDS_MINUTE);
-    const start = moment(startTime).utcOffset(+offset).format('hh:mm');
-    const end = moment(endTime).utcOffset(+offset).format('hh:mm');
+    const start = this.convertedDatePipe.transform(`${startTime}`, 'HH:mm', `${offset}`);
+    const end = this.convertedDatePipe.transform(`${endTime}`, 'HH:mm', `${offset}`);
     return `${start} - ${end} (${diff} min) - phase ${this.index + 1}/${this.phasesCount}`;
   }
 
