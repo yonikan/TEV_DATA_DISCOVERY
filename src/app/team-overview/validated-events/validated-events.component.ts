@@ -18,7 +18,7 @@ export class ValidatedEventsComponent implements OnInit {
   isTeamEventsLoading;
   index = 0;
   isLoading = true;
-  
+
   constructor(
     private dialog: MatDialog,
     private authService: AuthService,
@@ -28,19 +28,23 @@ export class ValidatedEventsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const TEAM_ID = this.authService.getUserLoginData().teams[0].id;
-    const BASE_URL = this.serverEnvService.getBaseUrl();
-    const API_VERSION = 'v2';
-    this.http
-      .get<any>(`${BASE_URL}/${API_VERSION}/team/${TEAM_ID}/team-events`)
-      .subscribe((result: any) => {
-        // this.teamEvents = result; // only validated team-events
-        this.teamEvents = result.splice(0, 20);
-        this.isLoading = false;
-        this.isTeamEventsLoading = false;
-      }, (err) => {
-        console.log('err: ', err);
-      });
+	this.authService.getUserLoginDataListener().subscribe(data => {
+		if (data.teams) {
+			const TEAM_ID = data.teams[0].id;
+			const BASE_URL = this.serverEnvService.getBaseUrl();
+			const API_VERSION = 'v2';
+			this.http
+			.get<any>(`${BASE_URL}/${API_VERSION}/team/${TEAM_ID}/team-events`)
+			.subscribe((result: any) => {
+				// this.teamEvents = result; // only validated team-events
+				this.teamEvents = result.splice(0, 20);
+				this.isLoading = false;
+				this.isTeamEventsLoading = false;
+			}, (err) => {
+				console.log('err: ', err);
+			});
+		}
+	});
   }
 
   onEditSession(teamEvent) {
@@ -61,7 +65,7 @@ export class ValidatedEventsComponent implements OnInit {
     const dialogRef = this.dialog.open(EventsCarouselModalComponent, {
       width: '500px',
       height: '200px',
-      data: { 
+      data: {
         title: modalTitle,
         message: modalMessage,
         modalData: teamEvent.teamEventId

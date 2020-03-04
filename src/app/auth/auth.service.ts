@@ -90,78 +90,18 @@ export class AuthService {
 
   checkLogin() {
 	if (this.cookieService.get('token')) {
-		console.log('popo');
-		this.isAuthenticated = true;
-		this.userLoginData = {"token":"a695ce5d-ad5b-4691-a934-6021110edc9a","email":"yoni.kangun@playermaker.com","firstName":"yoni","lastName":"kangun","imgUrl":"https://s3.eu-west-2.amazonaws.com/playermaker-user-images/public/1577967330.png","role":1,"userId":34026,"teams":[{"id":1114,"clubName":"Kangun","teamName":"First Team","teamPackage":1,"seasonName":"2020/2021","teamPicture":"https://s3.eu-west-2.amazonaws.com/playermaker-user-images/public/1581348446.png"}]};
-		this.userLoginDataListener.next(this.userLoginData);
-		this.authStatusListener.next(true);
-	//   this.reLogin()
-	// 	.subscribe((userLoginDataResponse: UserLogin) => {
-	// 		console.log('userLoginDataResponse', userLoginDataResponse);
-	// 		this.userLoginData = userLoginDataResponse;
-	// 		this.userLoginDataListener.next(userLoginDataResponse);
-	// 		this.authorizationService.allowedFeatures = userLoginDataResponse.features;
-	// 		this.isAuthenticated = true;
-	// 		this.authStatusListener.next(true);
-	// 	});
+	  this.reLogin()
+		.subscribe((userLoginDataResponse: UserLogin) => {
+			console.log('userLoginDataResponse', userLoginDataResponse);
+			this.userLoginData = userLoginDataResponse;
+			this.userLoginDataListener.next(userLoginDataResponse);
+			this.authorizationService.allowedFeatures = userLoginDataResponse.features;
+			this.isAuthenticated = true;
+			this.authStatusListener.next(true);
+		});
 	}
   }
 
-//   login(email: string, password: string) {
-// 	//   if (this.cookieService.get('token')) {
-// 	// 	  console.log('popo');
-// 	// 	return this.reLogin()
-// 	// 		.subscribe((userLoginDataResponse: UserLogin) => {
-// 	// 			console.log('userLoginDataResponse', userLoginDataResponse);
-// 	// 			this.userLoginData = userLoginDataResponse;
-// 	// 			this.userLoginDataListener.next(userLoginDataResponse);
-// 	// 			this.authorizationService.allowedFeatures = userLoginDataResponse.features;
-// 	// 			this.isAuthenticated = true;
-// 	// 			this.authStatusListener.next(true);
-// 	// 		});
-// 	//   }
-//     this.fetchUserLoginData(email, password)
-//       .subscribe(
-//         (userLoginDataResponse: UserLogin) => {
-//           if (userLoginDataResponse.token) {
-//             this.userLoginData = userLoginDataResponse;
-//             this.userLoginDataListener.next(userLoginDataResponse);
-//             this.authorizationService.allowedFeatures = userLoginDataResponse.features;
-// 			this.token = userLoginDataResponse.token;
-// 			this.cookieService.set('userId', `${userLoginDataResponse.userId}`);
-//             this.localStorageService.storeOnCookie('token', this.token);
-//             this.isAuthenticated = true;
-//             this.authStatusListener.next(true);
-//             this.router.navigate(['/team-overview']);
-//           }
-//         },
-//         (error) => {
-//           this.isAuthenticated = false;
-//           this.authStatusListener.next(false);
-//         }
-//       );
-  // login old - DONT DELETE!
-  // login(email: string, password: string) {
-  //   this.fetchUserLoginData(email, password)
-  //     .subscribe(
-  //       (userLoginDataResponse: UserLogin) => {
-  //         if (userLoginDataResponse.token) {
-  //           this.userLoginData = userLoginDataResponse;
-  //           this.userLoginDataListener.next(userLoginDataResponse);
-  //           this.authorizationService.allowedFeatures = userLoginDataResponse.features;
-  //           this.token = userLoginDataResponse.token;
-  //           this.localStorageService.storeOnCookie('token', this.token);
-  //           this.isAuthenticated = true;
-  //           this.authStatusListener.next(true);
-  //           this.router.navigate(['/team-overview']);
-  //         }
-  //       },
-  //       (error) => {
-  //         this.isAuthenticated = false;
-  //         this.authStatusListener.next(false);
-  //       }
-  //     );
-  // }
 
   login(email: string, password: string) {
     return this.fetchUserLoginData(email, password);
@@ -182,8 +122,9 @@ export class AuthService {
 
   reLogin(): Observable<any> {
 	const BASE_URL = this.serverEnvService.getBaseUrl();
-    const API_VERSION = 'v2';
-	return this.http.get<any>(`${BASE_URL}/${API_VERSION}/user/26235/re-login`);
+	const API_VERSION = 'v2';
+	const userId = this.cookieService.get('userId');
+	return this.http.get<any>(`${BASE_URL}/${API_VERSION}/user/${userId}/re-login`);
   }
 
   logout() {
