@@ -107,6 +107,7 @@ import { ConvertedDatePipe } from './common/convertedDate.pipe';
 	MatStepperModule
   ],
   providers: [
+    ConvertedDatePipe,
     {
       provide: SWIPER_CONFIG,
       useValue: DEFAULT_SWIPER_CONFIG

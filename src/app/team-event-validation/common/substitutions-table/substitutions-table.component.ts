@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { objToArray, sortFunction } from '../../../core/helpers/helper-functions';
 import { TeamEventValidationService } from '../../team-event-validation.service';
 
@@ -7,9 +7,9 @@ import { TeamEventValidationService } from '../../team-event-validation.service'
   templateUrl: './substitutions-table.component.html',
   styleUrls: ['./substitutions-table.component.scss']
 })
-export class SubstitutionsTableComponent implements OnInit, OnChanges {
+export class SubstitutionsTableComponent implements OnInit {
 
-  tableSizeConfig = { // TableSizeConfig
+  tableSizeConfig: any = { // TableSizeConfig
     Minute: '9%',
     In: '14%',
     Out: '14%',
@@ -17,31 +17,29 @@ export class SubstitutionsTableComponent implements OnInit, OnChanges {
     buttons: '9%'
   }
 
-  @Input() substitutions = []; // Substitution[]
-  @Input() suggestedSubs = []; // Substitutions
-  @Output() subsEmitter = new EventEmitter<any>();
+  @Input() substitutions: any[] = []; // Substitution[]
+  @Input() suggestedSubs: any[] = []; // Substitution[]
   @Output() isAllSubsValid = new EventEmitter<any>();
 
-  lineup; // Player[]
-  availableForSub; // Player[]
-  subFormationPerMinute = {}; // SubstiutionFormationPerMinute
-  emptySubstitution = { timeMin: '', inPlayerId: '', outPlayerId: '', defaultPositionId: '', type: '', id: '' }; // Substitution
+  lineup: any[]; // Player[]
+  availableForSub: any[]; // Player[]
+  subFormationPerMinute: any = {}; // SubstiutionFormationPerMinute
+  emptySubstitution: any = { timeMin: '', inPlayerId: '', outPlayerId: '', defaultPositionId: '', type: '', id: '' }; // Substitution
   Object: ObjectConstructor = Object;
   Math: Math = Math;
 
   constructor(private teamEventValidationService: TeamEventValidationService, private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
+    if (!this.subFormationPerMinute[0]) { this.initSubFormationByMinute(); };
+    this.setSubstitutions();
   }
 
-  ngOnChanges(change) {
-    if (!this.subFormationPerMinute[0]) { this.initSubFormationByMinute(); };
-    if (this.substitutions && change.substitutions && this.subFormationPerMinute[0]) {
-      this.sortSubstitutions();
-      this.buildSubFormationForAllSubs();
-      this.validateAllSubs();
-      this.cd.detectChanges();
-    }
+  setSubstitutions() {
+    this.sortSubstitutions();
+    this.buildSubFormationForAllSubs();
+    this.validateAllSubs(); // fix + check if suggestedSubs should trigger the onChanges()
+    this.cd.detectChanges();
   }
 
   initSubFormationByMinute(): void {
@@ -50,7 +48,6 @@ export class SubstitutionsTableComponent implements OnInit, OnChanges {
       availableForSub: this.teamEventValidationService.availableForSub
     };
     this.buildSubFormationForAllSubs();
-    this.ngOnChanges({ substitutions: this.substitutions });
   }
 
   buildSubFormationForAllSubs(): void {
@@ -65,33 +62,30 @@ export class SubstitutionsTableComponent implements OnInit, OnChanges {
     });
   }
 
-  removeRow(substitutionToRemove /* Substitution */, mode: string): void {
+  removeRow(substitutionToRemove: any /* Substitution */, mode: string): void {
     const selectSubsList = mode === 'SUGGESTED' ? this.suggestedSubs : this.substitutions;
     const substitutionIndex = selectSubsList.findIndex(substitution => substitution.subId === substitutionToRemove.subId);
     selectSubsList.splice(substitutionIndex, 1);
     delete this.subFormationPerMinute[substitutionToRemove.timeMin];
+    this.setSubstitutions();
   }
 
-  addRow(substitutionToAdd /* Substitution */) {
+  addRow(substitutionToAdd: any /* Substitution */): void {
     this.substitutions.push(substitutionToAdd);
-    this.ngOnChanges({ substitutions: this.substitutions });
+    this.setSubstitutions();
   }
 
-  editRow(substitutionToEdit /* Substitution */): void {
+  editRow(substitutionToEdit: any /* Substitution */): void {
     const substitutionIndex = this.substitutions.findIndex(substitution => substitution.subId === substitutionToEdit.subId);
     if (substitutionIndex !== -1) {
       this.substitutions[substitutionIndex] = substitutionToEdit;
-      this.ngOnChanges({ substitutions: this.substitutions });
+      this.setSubstitutions();
     }
   }
 
-  sendToTeamEvent(data /* Substitution[] */): void {
-    this.subsEmitter.emit(data);
-  }
-
-  buildSubFormationByMinute(sub/* Substitution */, index?: number) {
+  buildSubFormationByMinute(sub: any /* Substitution */, index?: number): void {
     index = index || index === 0 ? index : this.getSubIndex(sub.timeMin);
-    const prevSub = index > 0 ? this.subFormationPerMinute[this.substitutions[index - 1].timeMin] : this.subFormationPerMinute[0];
+    const prevSub = index > 0 && this.substitutions.length ? this.subFormationPerMinute[this.substitutions[index - 1].timeMin] : this.subFormationPerMinute[0];
     const currSub = JSON.parse(JSON.stringify(prevSub));
     const inPlayerIdx = currSub.availableForSub.findIndex(({ id }) => id === sub.inPlayerId);
     if (inPlayerIdx !== -1) {
@@ -125,10 +119,10 @@ export class SubstitutionsTableComponent implements OnInit, OnChanges {
       this.validateSubtitution(substitution, i);
       if (substitution.errorMassage) { isValid = false };
     });
-    this.isAllSubsValid.emit({ isValid, substitutions: this.substitutions });
+    this.isAllSubsValid.emit({ isValid, substitutions: this.substitutions, suggestedSubs: this.suggestedSubs });
   }
 
-  validateSubtitution(substitutionForCheck /* Substitution */, index: number): void {
+  validateSubtitution(substitutionForCheck: any /* Substitution */, index: number): void {
     let errorMassage = '';
 
     const matchDuraiton = this.teamEventValidationService.getMatchDuraiton();

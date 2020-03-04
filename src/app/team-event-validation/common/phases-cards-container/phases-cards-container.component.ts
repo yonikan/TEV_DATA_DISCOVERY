@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SwiperConfigInterface } from 'ngx-swiper-wrapper';
+import { TeamEventValidationService } from '../../team-event-validation.service';
 
 @Component({
   selector: 'app-phases-cards-container',
@@ -8,10 +9,10 @@ import { SwiperConfigInterface } from 'ngx-swiper-wrapper';
 })
 export class PhasesCardsContainerComponent implements OnInit {
 
-  @Input() cards = [];
+  @Input() cards: any[] = [];
   @Output() teamEventPhasesEmitter = new EventEmitter<any>();
 
-  index = 0;
+  index: number = 0;
 
   config: SwiperConfigInterface = {
     direction: 'horizontal',
@@ -41,7 +42,7 @@ export class PhasesCardsContainerComponent implements OnInit {
     }
   };
 
-  constructor() {
+  constructor(private teamEventValidationService: TeamEventValidationService) {
   }
 
   ngOnInit() {
@@ -50,8 +51,19 @@ export class PhasesCardsContainerComponent implements OnInit {
     }
   }
 
+  getPhaseName(phase, index) {
+    const phaseName = this.getMatchPhaseNameById(phase.subType);
+    if (phaseName === 'warmUp') { return };
+    index = this.getMatchPhaseNameById(this.cards[0].subType) !== 'warmUp' ? index : (index - 1);
+    const currentMatchPhaseObj = this.teamEventValidationService.getStaticMatchPhasesList()[index];
+    return currentMatchPhaseObj.name;
+  }
 
-  addEmptyCard() {
+  getMatchPhaseNameById(id) {
+    return this.teamEventValidationService.getMatchPhaseNameById(id);
+  }
+
+  addEmptyCard(): void {
     this.cards = [
       {
         id: '',
@@ -65,15 +77,15 @@ export class PhasesCardsContainerComponent implements OnInit {
     ]
   }
 
-  onDeleteCard(cardIdToDelete) {
+  onDeleteCard(cardIdToDelete: number): void {
     const cardIndex = this.cards.findIndex(card => card.id === cardIdToDelete);
     this.cards.splice(cardIndex, 1);
   }
 
-  updatePhase(updatedPhase) {
+  updatePhase(updatedPhase: any): void {
     const index = this.cards.findIndex((card) => { return card.id === updatedPhase.id });
     this.cards[index] = updatedPhase;
-    // TODO: sort by time
+    this.cards.sort((a, b) => a.startTime - b.startTime);
     this.teamEventPhasesEmitter.emit(this.cards);
   }
 }

@@ -3,7 +3,7 @@
 
   <td class="substitutions-cell" *ngFor="let cell of Object.keys(rowConfig);" [ngStyle]="{'width': rowConfig[cell]}">
 
-    <span *ngIf="substitutionForDisplay[cell]">{{cell === 'In' || cell === 'Out'? showPlayerNameByFormat(substitutionForDisplay[cell]) : substitutionForDisplay[cell]}} {{cell==='Minute'?"'":''}}</span>
+    <span *ngIf="substitutionForDisplay[cell]">{{cell === 'In' || cell === 'Out'? getPlayerNameByFormat(substitutionForDisplay[cell]) : substitutionForDisplay[cell]}} {{cell==='Minute'?"'":''}}</span>
 
     <div class="buttons" *ngIf="cell === 'buttons'">
 
@@ -42,7 +42,7 @@
 
       <div *ngIf="cell === 'In' || cell === 'Out'" class="edit-row-input">
         <button mat-button [matMenuTriggerFor]="menu" class="playerName-dropdwon">
-          {{showPlayerNameByFormat(substitutionForDisplay[cell]) || 'Select'}}
+          {{getPlayerNameByFormat(substitutionForDisplay[cell]) || 'Select'}}
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8">
             <defs>
               <filter id="a">
@@ -58,7 +58,7 @@
           <button mat-menu-item
           *ngFor="let player of (cell === 'In'? availableForSub : lineup); let cardIndex = index"
           (click)="populateCell(player.id, cell)">
-          {{showPlayerNameByFormat(player.firstName + ' ' + player.lastName)}}
+          {{getPlayerNameByFormat(player.firstName + ' ' + player.lastName)}}
         </button>
       </mat-menu>
     </div>
@@ -111,7 +111,7 @@
 <tr class="substitutions-row suggedted-mode" [ngStyle]="rowStyle" *ngIf="rowMode === 'SUGGESTED'">
 
   <th class="substitutions-cell" *ngFor="let cell of Object.keys(rowConfig);" [ngStyle]="{'width': rowConfig[cell]}">
-    <span *ngIf="substitutionForDisplay[cell]">{{cell === 'In' || cell === 'Out'? showPlayerNameByFormat(substitutionForDisplay[cell]) : substitutionForDisplay[cell]}} {{cell==='Minute'?"'":''}}</span>
+    <span *ngIf="substitutionForDisplay[cell]">{{cell === 'In' || cell === 'Out'? getPlayerNameByFormat(substitutionForDisplay[cell]) : substitutionForDisplay[cell]}} {{cell==='Minute'?"'":''}}</span>
 
     <div class="buttons" *ngIf="cell === 'buttons'">
 
