@@ -6,6 +6,7 @@
         <!-- <div class="heading">Starting Formations</div> -->
         <div class="content">
 			<app-formation-selection
+				[selectedTacticId]="selectedTacticId"
 				[positions]="positions"
                 [tabs]="playersData"
                 [tactics]="tactics | async"
