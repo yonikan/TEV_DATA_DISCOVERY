@@ -85,7 +85,7 @@ export class SubstitutionsTableComponent implements OnInit {
 
   buildSubFormationByMinute(sub: any /* Substitution */, index?: number): void {
     index = index || index === 0 ? index : this.getSubIndex(sub.timeMin);
-    const prevSub = index > 0 ? this.subFormationPerMinute[this.substitutions[index - 1].timeMin] : this.subFormationPerMinute[0];
+    const prevSub = index > 0 && this.substitutions.length ? this.subFormationPerMinute[this.substitutions[index - 1].timeMin] : this.subFormationPerMinute[0];
     const currSub = JSON.parse(JSON.stringify(prevSub));
     const inPlayerIdx = currSub.availableForSub.findIndex(({ id }) => id === sub.inPlayerId);
     if (inPlayerIdx !== -1) {
