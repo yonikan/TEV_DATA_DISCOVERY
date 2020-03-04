@@ -17,7 +17,7 @@
             [value]="option"
             [ngStyle]="{ 'margin-left': !first ? '75px' : '0' }"
             (change)="onUpdateField({value: option.subType, filedPathToUpdate: ['subType']})"
-            [checked]="(getMatchPhaseNameById(phaseToEdit.subType) === 'warmUp' && getMatchPhaseNameById(option.subType) === 'warmUp') || (phaseToEdit.subType !== 5 && !option.subType)"
+            [checked]="(getMatchPhaseNameById(phaseToEdit.subType) === 'warmUp' && getMatchPhaseNameById(option.subType) === 'warmUp') || (getMatchPhaseNameById(phaseToEdit.subType) !== 'warmUp' && !option.subType)"
           > <!-- [checked]="phaseToEdit.subType === option.subType" -->
 
           <i class="demo-icon icon-calender" *ngIf="getMatchPhaseNameById(option.subType) !== 'warmUp'">&#xe816;</i>
