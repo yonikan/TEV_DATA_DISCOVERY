@@ -35,25 +35,18 @@ export class AuthService {
     return this.token;
   }
 
-  getIsAuth(): boolean {
-	  // !!this.cookieService.get('token') ||
-	//   return this.isAuthenticated;
-	console.log('getauth');
-	if (this.cookieService.get('token')) {
-		console.log('token');
-		this.reLogin()
-		.subscribe((userLoginDataResponse: UserLogin) => {
-			console.log('userLoginDataResponse', userLoginDataResponse);
-			this.userLoginData = userLoginDataResponse;
-			this.userLoginDataListener.next(userLoginDataResponse);
-			this.authorizationService.allowedFeatures = userLoginDataResponse.features;
-			this.isAuthenticated = true;
-			this.authStatusListener.next(true);
-		});
-		return true;
-	}
-	return false;
-  }
+	getIsAuth(): Observable<boolean> {
+		if (this.isAuthenticated) {
+			return of(this.isAuthenticated);
+		}
+		if (this.cookieService.get('token')) {
+			return this.reLogin().pipe(map(value => {
+				return true;
+			}))
+		}
+
+		return of(false);
+}
 
   setIsAuth(isAuthenticated) {
     this.isAuthenticated = isAuthenticated;
@@ -92,7 +85,6 @@ export class AuthService {
 	if (this.cookieService.get('token')) {
 	  this.reLogin()
 		.subscribe((userLoginDataResponse: UserLogin) => {
-			console.log('userLoginDataResponse', userLoginDataResponse);
 			this.userLoginData = userLoginDataResponse;
 			this.userLoginDataListener.next(userLoginDataResponse);
 			this.authorizationService.allowedFeatures = userLoginDataResponse.features;
