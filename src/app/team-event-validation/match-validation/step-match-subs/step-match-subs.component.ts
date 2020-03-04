@@ -7,26 +7,33 @@ import { TeamEventValidationService } from '../../team-event-validation.service'
 	styleUrls: ['./step-match-subs.component.scss']
 })
 export class StepMatchSubsComponent implements OnInit {
-	@Input() stepMatchSubsData: any;
-	@Output() stepSelectionEmitter = new EventEmitter<number>();
+	@Input() stepMatchSubsData: any; // Substitution[]
+  @Output() stepSelectionEmitter = new EventEmitter<number>();
 
-	constructor(private teamEventValidationService: TeamEventValidationService) { }
+  isStepValid: boolean;
+
+	constructor(public teamEventValidationService: TeamEventValidationService) { }
 
 	ngOnInit() {
-		// console.log('stepMatchSubsData: ', this.stepMatchSubsData);
 	}
 
-	validateMatch(data) {
+	validateMatch(): void {
 		this.teamEventValidationService.matchDataOutput.step5SubsData = this.stepMatchSubsData;
 		this.stepSelectionEmitter.emit(5);
 	}
 
-	previousStep() {
+	previousStep(): void {
 		this.stepSelectionEmitter.emit(-1);
-	}
+  }
+
+  checkIfSubsAreValid(event): void{
+    this.isStepValid = event.isValid;
+    if (event.isValid) {
+      this.onMatchSubsEmitter(event.substitutions);
+    }
+  }
 
 	onMatchSubsEmitter(matchSubsData) {
-		console.log('matchSubsData: ', matchSubsData);
 		// const matchData = this.teamEventValidationService.getMatchValidationData();
 		// let matchDataCopy = {...matchData};
 		// matchDataCopy.substitutions = matchSubsData;

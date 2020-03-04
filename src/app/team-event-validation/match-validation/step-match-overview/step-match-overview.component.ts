@@ -24,11 +24,10 @@ export class StepMatchOverviewComponent implements OnInit {
   nextStep() {
     this.teamEventValidationService.matchDataOutput.step1OverviewData = this.stepMatchOverviewData;
     this.stepSelectionEmitter.emit(1);
-    console.log(this.stepMatchOverviewData);
   }
 
   onMatchOverviewEmitter(matchOverviewData) {
-		const matchData = this.teamEventValidationService.getMatchValidationData();
+    const matchData = this.teamEventValidationService.getMatchValidationData();
 		let matchDataCopy = {...matchData};
     matchDataCopy.metadata.vanue = matchOverviewData.vanue;
     matchDataCopy.metadata.myScore = matchOverviewData.myScore;
@@ -37,6 +36,7 @@ export class StepMatchOverviewComponent implements OnInit {
     matchDataCopy.metadata.competition = matchOverviewData.competition;
     matchDataCopy.metadata.availableOpponentList = matchOverviewData.availableOpponentList;
 		this.teamEventValidationService.setMatchValidationData(matchDataCopy);
+    console.log(this.teamEventValidationService.getMatchValidationData())
   }
 
   onTagsEmitter(tags) {

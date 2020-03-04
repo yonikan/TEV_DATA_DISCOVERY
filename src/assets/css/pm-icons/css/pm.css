@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'pm';
-  src: url('../font/pm.eot?4523459');
-  src: url('../font/pm.eot?4523459#iefix') format('embedded-opentype'),
-       url('../font/pm.woff2?4523459') format('woff2'),
-       url('../font/pm.woff?4523459') format('woff'),
-       url('../font/pm.ttf?4523459') format('truetype'),
-       url('../font/pm.svg?4523459#pm') format('svg');
+  src: url('../font/pm.eot?51145581');
+  src: url('../font/pm.eot?51145581#iefix') format('embedded-opentype'),
+       url('../font/pm.woff2?51145581') format('woff2'),
+       url('../font/pm.woff?51145581') format('woff'),
+       url('../font/pm.ttf?51145581') format('truetype'),
+       url('../font/pm.svg?51145581#pm') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'pm';
-    src: url('../font/pm.svg?4523459#pm') format('svg');
+    src: url('../font/pm.svg?51145581#pm') format('svg');
   }
 }
 */
@@ -102,4 +102,11 @@
 .icon-edit:before { content: '\e82d'; } /* '' */
 .icon-flag-china-new:before { content: '\e82e'; } /* '' */
 .icon-flag-spanish-new:before { content: '\e830'; } /* '' */
+.icon-runing:before { content: '\e832'; } /* '' */
+.icon-shirt-2:before { content: '\e833'; } /* '' */
+.icon-small-sided-game:before { content: '\e834'; } /* '' */
+.icon-tactical:before { content: '\e835'; } /* '' */
+.icon-technical:before { content: '\e836'; } /* '' */
+.icon-worm-up:before { content: '\e837'; } /* '' */
+.icon-possession:before { content: '\e838'; } /* '' */
 .icon-logo-db:before { content: '\f603'; } /* '' */

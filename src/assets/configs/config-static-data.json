@@ -19,11 +19,23 @@
 		"16": {"shortName": "CF", "category": "Forwards", "categoryShortName": "FW"},
 		"17": {"shortName": "ST", "category": "Forwards", "categoryShortName": "FW"}
     },
+
   "competitions": {
     "1": {"name": "League"},
     "2": {"name": "Cup"},
     "3": {"name": "Tournament"},
     "4": {"name": "Friendly Match"},
     "6": {"name": "Internal Friendly Match"}
+  },
+
+  "matchPhases": {
+    "1": {"name": "1st"},
+    "2": {"name": "2nd"},
+    "3": {"name": "3rd"},
+    "4": {"name": "4th"},
+    "5": {"name": "et.1"},
+    "6": {"name": "et.2"},
+    "7": {"name": "warmUp"}
   }
+
 }

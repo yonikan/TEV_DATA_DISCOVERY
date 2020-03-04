@@ -37,7 +37,8 @@ export class AuthService {
 
   getIsAuth(): boolean {
 	  // !!this.cookieService.get('token') ||
-	  return this.isAuthenticated;
+	//   return this.isAuthenticated;
+	console.log('getauth');
 	if (this.cookieService.get('token')) {
 		console.log('token');
 		this.reLogin()
@@ -106,39 +107,77 @@ export class AuthService {
 	}
   }
 
+//   login(email: string, password: string) {
+// 	//   if (this.cookieService.get('token')) {
+// 	// 	  console.log('popo');
+// 	// 	return this.reLogin()
+// 	// 		.subscribe((userLoginDataResponse: UserLogin) => {
+// 	// 			console.log('userLoginDataResponse', userLoginDataResponse);
+// 	// 			this.userLoginData = userLoginDataResponse;
+// 	// 			this.userLoginDataListener.next(userLoginDataResponse);
+// 	// 			this.authorizationService.allowedFeatures = userLoginDataResponse.features;
+// 	// 			this.isAuthenticated = true;
+// 	// 			this.authStatusListener.next(true);
+// 	// 		});
+// 	//   }
+//     this.fetchUserLoginData(email, password)
+//       .subscribe(
+//         (userLoginDataResponse: UserLogin) => {
+//           if (userLoginDataResponse.token) {
+//             this.userLoginData = userLoginDataResponse;
+//             this.userLoginDataListener.next(userLoginDataResponse);
+//             this.authorizationService.allowedFeatures = userLoginDataResponse.features;
+// 			this.token = userLoginDataResponse.token;
+// 			this.cookieService.set('userId', `${userLoginDataResponse.userId}`);
+//             this.localStorageService.storeOnCookie('token', this.token);
+//             this.isAuthenticated = true;
+//             this.authStatusListener.next(true);
+//             this.router.navigate(['/team-overview']);
+//           }
+//         },
+//         (error) => {
+//           this.isAuthenticated = false;
+//           this.authStatusListener.next(false);
+//         }
+//       );
+  // login old - DONT DELETE!
+  // login(email: string, password: string) {
+  //   this.fetchUserLoginData(email, password)
+  //     .subscribe(
+  //       (userLoginDataResponse: UserLogin) => {
+  //         if (userLoginDataResponse.token) {
+  //           this.userLoginData = userLoginDataResponse;
+  //           this.userLoginDataListener.next(userLoginDataResponse);
+  //           this.authorizationService.allowedFeatures = userLoginDataResponse.features;
+  //           this.token = userLoginDataResponse.token;
+  //           this.localStorageService.storeOnCookie('token', this.token);
+  //           this.isAuthenticated = true;
+  //           this.authStatusListener.next(true);
+  //           this.router.navigate(['/team-overview']);
+  //         }
+  //       },
+  //       (error) => {
+  //         this.isAuthenticated = false;
+  //         this.authStatusListener.next(false);
+  //       }
+  //     );
+  // }
+
   login(email: string, password: string) {
-	//   if (this.cookieService.get('token')) {
-	// 	  console.log('popo');
-	// 	return this.reLogin()
-	// 		.subscribe((userLoginDataResponse: UserLogin) => {
-	// 			console.log('userLoginDataResponse', userLoginDataResponse);
-	// 			this.userLoginData = userLoginDataResponse;
-	// 			this.userLoginDataListener.next(userLoginDataResponse);
-	// 			this.authorizationService.allowedFeatures = userLoginDataResponse.features;
-	// 			this.isAuthenticated = true;
-	// 			this.authStatusListener.next(true);
-	// 		});
-	//   }
-    this.fetchUserLoginData(email, password)
-      .subscribe(
-        (userLoginDataResponse: UserLogin) => {
-          if (userLoginDataResponse.token) {
-            this.userLoginData = userLoginDataResponse;
-            this.userLoginDataListener.next(userLoginDataResponse);
-            this.authorizationService.allowedFeatures = userLoginDataResponse.features;
-			this.token = userLoginDataResponse.token;
-			this.cookieService.set('userId', `${userLoginDataResponse.userId}`);
-            this.localStorageService.storeOnCookie('token', this.token);
-            this.isAuthenticated = true;
-            this.authStatusListener.next(true);
-            this.router.navigate(['/team-overview']);
-          }
-        },
-        (error) => {
-          this.isAuthenticated = false;
-          this.authStatusListener.next(false);
-        }
-      );
+    return this.fetchUserLoginData(email, password);
+  }
+
+  loginResponseHandle(userLoginDataResponse: any) {
+    if (userLoginDataResponse.token) {
+      this.userLoginData = userLoginDataResponse;
+      this.userLoginDataListener.next(userLoginDataResponse);
+      this.authorizationService.allowedFeatures = userLoginDataResponse.features;
+      this.token = userLoginDataResponse.token;
+      this.localStorageService.storeOnCookie('token', this.token);
+      this.isAuthenticated = true;
+      this.authStatusListener.next(true);
+      this.router.navigate(['/team-overview']);
+    }
   }
 
   reLogin(): Observable<any> {

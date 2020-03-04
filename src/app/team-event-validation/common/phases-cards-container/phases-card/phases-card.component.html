@@ -14,10 +14,11 @@
     </button>
   </mat-menu>
 
-  <mat-icon class="card-icon">account_circle</mat-icon>
+  <i class="demo-icon icon-calender card-icon" *ngIf="phase.subType !== 7">&#xe809;</i>
+  <i class="demo-icon icon-vlc-new card-icon" *ngIf="phase.subType === 7">&#xe817;</i>
 
   <div class="card-title">
-    {{ translateEnumNumber(phase.type) }}
+    {{ translatePhaseName(phase.subType) }}
   </div>
 
   <div class="card-time-details">

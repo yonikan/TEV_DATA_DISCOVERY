@@ -56,6 +56,7 @@ export class MatchOverviewComponent implements OnInit {
   updateScore(event, side) {
     let score = +event.target.value;
     if (score < 0 || score > 99) { score = 0 };
+    if (score % 1 !== 0) { score = Math.floor(score) };
     if (side === 'HOME') { this.setGameData(score, 'selectedScore', 'myScore') };
     if (side === 'AWAY') { this.setGameData(score, 'selectedOpponentScore', 'opponentScore') };
     event.target.value = score;

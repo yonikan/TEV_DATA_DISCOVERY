@@ -20,27 +20,24 @@
     </div>
 
   </td>
-  <mat-error *ngIf="substitution.errorMassage">{{substitution.errorMassage}}</mat-error>
-
 </tr>
 <!------------------------------------------------------------>
 
 
 
 <!------------------------- EDIT/NEW MODE ------------------------>
-<tr class="substitutions-row" [ngStyle]="rowStyle" *ngIf="rowMode === 'EDIT' || rowMode === 'NEW'" (keyup.enter)="editRowEmit()" (dblclick)="changeRowMode('GENERAL')">
+<tr class="substitutions-row" [ngStyle]="rowStyle" *ngIf="rowMode === 'EDIT' || rowMode === 'NEW'" (keyup.enter)="editRowEmit()" (dblclick)="editRowEmit()">
 
   <td class="substitutions-cell" *ngFor="let cell of Object.keys(rowConfig);" [ngStyle]="{'width': rowConfig[cell]}">
 
-    <!-- <input class="edit-input" *ngIf="cell !== 'buttons'" type="text" value="{{substitutionForDisplay[cell]}}" (input)="populateCell($event?.target?.value, cell)"/> -->
-
     <div *ngIf="cell !== 'buttons'">
       <input class="edit-row-input"
-             *ngIf="cell === 'Minute'"
-             type="number" min="0" max="125" placeholder="0"
-             value="{{substitutionForDisplay['Minute'] || 0}}"
-             (input)="populateCell($event?.target?.value, 'Minute', $event, true)"
-             (dblclick)="stopPropagation($event)">
+      *ngIf="cell === 'Minute'"
+      type="number" min="0" max="125" placeholder="0"
+      value="{{substitutionForDisplay['Minute'] || 0}}"
+      (input)="populateCell($event?.target?.value, 'Minute', true)"
+      (dblclick)="$event.stopPropagation"
+      (blur)="setSubsListEmit()">
 
 
       <div *ngIf="cell === 'In' || cell === 'Out'" class="edit-row-input">
@@ -48,45 +45,45 @@
           {{showPlayerNameByFormat(substitutionForDisplay[cell]) || 'Select'}}
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8">
             <defs>
-                <filter id="a">
-                    <feFlood flood-color="#35083A" flood-opacity="1" result="floodOut"/>
-                    <feComposite in="floodOut" in2="SourceGraphic" operator="atop" result="compOut"/>
-                    <feBlend in="compOut" in2="SourceGraphic"/>
-                </filter>
+              <filter id="a">
+                <feFlood flood-color="#35083A" flood-opacity="1" result="floodOut"/>
+                <feComposite in="floodOut" in2="SourceGraphic" operator="atop" result="compOut"/>
+                <feBlend in="compOut" in2="SourceGraphic"/>
+              </filter>
             </defs>
             <path fill="#35083A" fill-rule="evenodd" d="M.316 1.862l.003-.002A1.063 1.063 0 0 1 0 1.111C0 .498.538 0 1.2 0c.35 0 .663.141.881.362L2.085.36 7 5.244 11.916.36l.003.002C12.138.141 12.45 0 12.8 0c.663 0 1.2.498 1.2 1.111 0 .289-.122.551-.318.749l.003.002-5.8 5.778A1.25 1.25 0 0 1 7 8c-.337 0-.657-.131-.884-.36l-5.8-5.778z" filter="url(#a)"/>
           </svg>
         </button>
         <mat-menu #menu="matMenu" class="">
           <button mat-menu-item
-                  *ngFor="let player of (cell === 'In'? availableForSub : lineup); let cardIndex = index"
-                  (click)="populateCell(player.id, cell, $event)">
-                  {{showPlayerNameByFormat(player.firstName + ' ' + player.lastName)}}
-          </button>
-        </mat-menu>
-      </div>
+          *ngFor="let player of (cell === 'In'? availableForSub : lineup); let cardIndex = index"
+          (click)="populateCell(player.id, cell)">
+          {{showPlayerNameByFormat(player.firstName + ' ' + player.lastName)}}
+        </button>
+      </mat-menu>
+    </div>
 
-      <div *ngIf="cell === 'Position'" class="edit-row-input">
+    <div *ngIf="cell === 'Position'" class="edit-row-input">
         <button mat-button [matMenuTriggerFor]="menu" class="playerName-dropdwon">
           {{substitutionForDisplay[cell] || 'Select'}}
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8">
             <defs>
-                <filter id="a">
-                    <feFlood flood-color="#35083A" flood-opacity="1" result="floodOut"/>
-                    <feComposite in="floodOut" in2="SourceGraphic" operator="atop" result="compOut"/>
-                    <feBlend in="compOut" in2="SourceGraphic"/>
+              <filter id="a">
+                <feFlood flood-color="#35083A" flood-opacity="1" result="floodOut"/>
+                <feComposite in="floodOut" in2="SourceGraphic" operator="atop" result="compOut"/>
+                <feBlend in="compOut" in2="SourceGraphic"/>
                 </filter>
-            </defs>
+              </defs>
             <path fill="#35083A" fill-rule="evenodd" d="M.316 1.862l.003-.002A1.063 1.063 0 0 1 0 1.111C0 .498.538 0 1.2 0c.35 0 .663.141.881.362L2.085.36 7 5.244 11.916.36l.003.002C12.138.141 12.45 0 12.8 0c.663 0 1.2.498 1.2 1.111 0 .289-.122.551-.318.749l.003.002-5.8 5.778A1.25 1.25 0 0 1 7 8c-.337 0-.657-.131-.884-.36l-5.8-5.778z" filter="url(#a)"/>
           </svg>
         </button>
         <mat-menu #menu="matMenu" class="">
           <button mat-menu-item
-                  *ngFor="let position of positions; let cardIndex = index"
-                  (click)="populateCell(position.id, cell, $event)">
-                  {{position.shortName}}
-          </button>
-        </mat-menu>
+          *ngFor="let position of positions; let cardIndex = index"
+          (click)="populateCell(position.id, cell)">
+          {{position.shortName}}
+        </button>
+      </mat-menu>
       </div>
     </div>
 
@@ -105,8 +102,7 @@
 </tr>
 <!------------------------------------------------------------>
 
-
-
+<mat-error *ngIf="substitution?.errorMassage"><i class="demo-icon icon-error-icon">&#xe80b;</i>{{substitution.errorMassage}}</mat-error>
 
 
 

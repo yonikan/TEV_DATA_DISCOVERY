@@ -14,25 +14,25 @@
   <substitutions-row
     *ngFor="let substitution of substitutions; let even = even; let index = index;"
     [substitution]="substitution"
-    [participationgPlayers]="participationgPlayers"
     [lineup]="subFormationPerMinute[substitution.timeMin]?.lineup"
     [availableForSub]="subFormationPerMinute[substitution.timeMin]?.availableForSub"
     [rowConfig]="tableSizeConfig"
     [rowStyle]="{ background: even ? '#ffffff' : '#e8e8e838' }"
     (removeRow)="removeRow($event.substitution, $event.rowMode)"
     (editRow)="editRow($event.substitution)"
+    (setSubsList)="buildSubFormationByMinute($event.substitution)"
     (addRow)="addRow($event.substitution)">
   </substitutions-row>
 
   <!-- add new row -->
   <substitutions-row
     [rowMode]="'NEW'"
-    [participationgPlayers]="participationgPlayers"
     [substitution]="emptySubstitution"
-    [lineup]="lineup"
-    [availableForSub]="availableForSub"
+    [lineup]="subFormationPerMinute[Math.max.apply(null,Object.keys(subFormationPerMinute))]?.lineup"
+    [availableForSub]="subFormationPerMinute[Math.max.apply(null,Object.keys(subFormationPerMinute))]?.availableForSub"
     [rowConfig]="tableSizeConfig"
     (editRow)="editRow($event.substitution)"
+    (setSubsList)="buildSubFormationByMinute($event.substitution)"
     (addRow)="addRow($event.substitution)">
   </substitutions-row>
   <!----------------->
@@ -43,7 +43,6 @@
 
     <substitutions-row
     [rowMode]="'SUGGESTED'"
-    [participationgPlayers]="participationgPlayers"
     *ngFor="let substitution of suggestedSubs; let even = even; let index = index;"
     [substitution]="substitution"
     [lineup]="lineup"

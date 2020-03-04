@@ -35,10 +35,8 @@ export class PhasesCardComponent implements OnInit {
     // console.log(this.phase)
   }
 
-  translateEnumNumber(enumNumber) {
-    return enumNumber;
-    // console.log(TrainingDrills, enumNumber);
-    return enumToString(TrainingDrills, enumNumber);
+  translatePhaseName(phaseSubTypeId) {
+    return this.teamEventValidationService.getStaticMatchPhasesList()[phaseSubTypeId].name;
   }
 
   getTimeByFormat(startTime, endTime, offset?) {
