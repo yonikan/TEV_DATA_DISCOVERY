@@ -43,12 +43,10 @@ export class StepMatchPhasesComponent implements OnInit, OnChanges {
 	}
 
 	onMatchPhasesEmitter(updatedPhases) {
-    this.stepMatchPhasesData.phases = updatedPhases;
-    //TODO: replace in step data
-
-		// const matchData = this.teamEventValidationService.getMatchValidationData();
-		// let matchDataCopy = {...matchData};
-		// matchDataCopy.phases = matchPhasesData;
-		// this.teamEventValidationService.setMatchValidationData(matchDataCopy);
+   	    this.stepMatchPhasesData.phases = updatedPhases;
+		const matchData = this.teamEventValidationService.getMatchValidationData();
+		let matchDataCopy = {...matchData};
+		matchDataCopy.phases.phasesList = updatedPhases;
+		this.teamEventValidationService.setMatchValidationData(matchDataCopy);
 	}
 }
