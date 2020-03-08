@@ -36,7 +36,7 @@ export class StepMatchFormationsComponent implements OnInit, OnChanges {
 	formationData: any = [];
 	participatingPlayers:any = [];
 	isValidated = true;
-	selectedTacticId;
+	selectedFormationId;
 
 	constructor(
 		private teamEventValidationService: TeamEventValidationService,
@@ -52,7 +52,7 @@ export class StepMatchFormationsComponent implements OnInit, OnChanges {
 	ngOnChanges() {
 		this.participatingPlayers = this.stepMatchFormationsData.participatingPlayers;
 		this.formationData = this.stepMatchFormationsData.formation;
-		this.selectedTacticId = this.stepMatchFormationsData.selectedTacticId;
+		this.selectedFormationId = this.stepMatchFormationsData.selectedFormationId;
 		if (this.positions) {
 			this.playersData = Object.values(this.stepMatchFormationsData.participatingPlayers)
 				.reduce((acc: any, val: any) => {
