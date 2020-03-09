@@ -197,24 +197,26 @@ export class TeamEventValidationService {
   }
 
   getAllParticipatingPlayers() {
-    // console.log('getCurrentValitationData: ', this.getCurrentValitationData(), this.getMatchValidationData());
-    return this.getCurrentValitationData().participatingPlayers || {};
+	const validationData = this.getCurrentValitationData();
+    return validationData && validationData.participatingPlayers || {};
   }
 
   setFormation() {
-    // console.log(this.getCurrentValitationData())
-    const participatingPlayers = this.getCurrentValitationData().participatingPlayers;
-    this.lineup = this.getPlayersByIds(this.getCurrentValitationData().formation, 'playerId');
-    // this.availableForSub = { ...participatingPlayers };
-    // this.lineup.forEach((player) => {
-    //   const playerId = player.playerId;
-    //   if (participatingPlayers.hasOwnProperty(playerId) && participatingPlayers[playerId]) { delete this.availableForSub[playerId] };
-    // });
+	const validationData = this.getCurrentValitationData();
+	if (validationData) {
+		const participatingPlayers = validationData.participatingPlayers;
+		this.lineup = this.getPlayersByIds(this.getCurrentValitationData().formation, 'playerId');
+		// this.availableForSub = { ...participatingPlayers };
+		// this.lineup.forEach((player) => {
+		//   const playerId = player.playerId;
+		//   if (participatingPlayers.hasOwnProperty(playerId) && participatingPlayers[playerId]) { delete this.availableForSub[playerId] };
+		// });
 
 
-    this.availableForSub = Object.values(participatingPlayers).filter((player) => {
-      return !this.isPlayerInLineup(player);
-    });
+		this.availableForSub = Object.values(participatingPlayers).filter((player) => {
+		return !this.isPlayerInLineup(player);
+		});
+	}
   }
 
   isPlayerInLineup(player) {

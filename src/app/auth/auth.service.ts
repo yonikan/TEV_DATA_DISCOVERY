@@ -77,7 +77,14 @@ export class AuthService {
       email,
       password
     };
-    return this.http.post<any>(`${BASE_URL}/${API_VERSION}/account/login`, USER_DATA);
+    return this.http.post<any>(`${BASE_URL}/${API_VERSION}/account/login`, USER_DATA, {observe: 'response'}).pipe(
+		tap(res => {
+			// save app-version
+			this.localStorageService.storeOnLocalStorage('app-version', res.headers.get('app-version'));
+			return res;
+		}),
+		map(res => res.body)
+	);
     // return of(LOGIN_DATA);
   }
 
@@ -120,10 +127,11 @@ export class AuthService {
   }
 
   logout() {
+	this.cookieService.delete('token');
     this.token = null;
     this.isAuthenticated = false;
     this.authStatusListener.next(false);
-    this.router.navigate(['login']);
+	this.router.navigate(['login']);
   }
 
   postForgotPassword(email: string): Observable<any> {

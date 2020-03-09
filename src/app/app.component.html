@@ -3,7 +3,7 @@
     <app-mobilenav (closeSidenav)="sidenav.close()"></app-mobilenav>
   </mat-sidenav>
 
-  <mat-sidenav #sidepanel mode="over" position="end" [opened]="isSidepanelOpen" (closed)="sidePanelClosed()" class="sidepanel">
+  <mat-sidenav *ngIf="isAuthenticated" #sidepanel mode="over" position="end" [opened]="isSidepanelOpen" (closed)="sidePanelClosed()" class="sidepanel">
     <app-training-validation *ngIf="sidepanelOpenTeamEventType === 1" [trainingId]="teamEventId"></app-training-validation>
     <app-match-validation *ngIf="sidepanelOpenTeamEventType === 2" [matchId]="teamEventId"></app-match-validation>
   </mat-sidenav>
@@ -16,7 +16,7 @@
              <app-sidenav></app-sidenav>
           </div>
           <main class="page-container" [ngClass]="{'auth-off':!isAuthenticated}">
-            <div [class.show]="isLoading" class="loading-overlay"> 
+            <div [class.show]="isLoading" class="loading-overlay">
               <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
             </div>
             <router-outlet></router-outlet>
