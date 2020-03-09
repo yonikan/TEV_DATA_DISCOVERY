@@ -10,6 +10,7 @@ export class FormationSelectionComponent implements OnInit, OnChanges {
   @Input() tactics;
   @Input() definedSubs;
   @Input() positions;
+  @Input() selectedFormationId;
 
   @Output() onSelectTactic = new EventEmitter();
   @Output() onSelectDefinedSub = new EventEmitter();
@@ -26,7 +27,18 @@ export class FormationSelectionComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     if (this.tactics && this.tactics.length && !this.selectedTactic) {
-      this.selectedTactic = this.tactics[0];
+		if (this.selectedFormationId) {
+			this.tactics.some(tactic => {
+				if (tactic.id === this.selectedFormationId) {
+					this.selectedTactic = tactic;
+					return true;
+				}
+				return false;
+			});
+		} else {
+			[this.selectedTactic] = this.tactics;
+		}
+
       this.selectTactic({value: this.selectedTactic});
     }
   }

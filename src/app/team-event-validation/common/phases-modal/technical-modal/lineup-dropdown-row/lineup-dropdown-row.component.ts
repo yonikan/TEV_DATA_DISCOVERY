@@ -50,7 +50,7 @@ export class LineupDropdownRowComponent implements OnInit {
 
 
   isDisabeled() {
-    // console.log('isPlayerPartitpateInOverlapPhase: ', this.service.isPlayerPartitpateInOverlapPhase(this.player.playerId, this.phase))
-    return this.teamEventValidationService.isPlayerPartitpateInOverlapPhase(this.player.id, this.phase);
+    // console.log('isPhaseOverlap: ', this.service.isPhaseOverlap(this.player.playerId, this.phase))
+    return this.teamEventValidationService.isPhaseOverlap(this.player.id, this.phase);
   }
 }

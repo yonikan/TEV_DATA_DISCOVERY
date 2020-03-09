@@ -13,7 +13,7 @@ export class AreYouSureModalComponent {
     @Inject(MAT_DIALOG_DATA) public data: { message: string, title: string, modalData?: any }
   ){}
 
-  onCancel() {
+  onCancel(): void {
     this.dialogRef.close();
   }
 }

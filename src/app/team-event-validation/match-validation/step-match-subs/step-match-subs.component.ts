@@ -9,8 +9,8 @@ import { TeamEventValidationService } from '../../team-event-validation.service'
 export class StepMatchSubsComponent implements OnInit {
 	@Input() stepMatchSubsData: any; // Substitution[]
   @Output() stepSelectionEmitter = new EventEmitter<number>();
+	@Output() onValidate = new EventEmitter<boolean>();
 
-  isStepValid: boolean;
 
 	constructor(public teamEventValidationService: TeamEventValidationService) { }
 
@@ -27,16 +27,17 @@ export class StepMatchSubsComponent implements OnInit {
   }
 
   checkIfSubsAreValid(event): void{
-    this.isStepValid = event.isValid;
+		this.onValidate.emit(event.isValid);
     if (event.isValid) {
-      this.onMatchSubsEmitter(event.substitutions);
+      this.onMatchSubsEmitter(event);
     }
   }
 
 	onMatchSubsEmitter(matchSubsData) {
-		// const matchData = this.teamEventValidationService.getMatchValidationData();
-		// let matchDataCopy = {...matchData};
-		// matchDataCopy.substitutions = matchSubsData;
-		// this.teamEventValidationService.setMatchValidationData(matchDataCopy);
+		const matchData = this.teamEventValidationService.getMatchValidationData();
+		let matchDataCopy = {...matchData};
+		matchDataCopy.substitutions.subList = matchSubsData.substitutions;
+    matchDataCopy.substitutions.suggestedSubs = matchSubsData.suggestedSubs;
+		this.teamEventValidationService.setMatchValidationData(matchDataCopy);
 	}
 }

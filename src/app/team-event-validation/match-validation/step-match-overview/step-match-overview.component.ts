@@ -36,7 +36,6 @@ export class StepMatchOverviewComponent implements OnInit {
     matchDataCopy.metadata.competition = matchOverviewData.competition;
     matchDataCopy.metadata.availableOpponentList = matchOverviewData.availableOpponentList;
 		this.teamEventValidationService.setMatchValidationData(matchDataCopy);
-    console.log(this.teamEventValidationService.getMatchValidationData())
   }
 
   onTagsEmitter(tags) {

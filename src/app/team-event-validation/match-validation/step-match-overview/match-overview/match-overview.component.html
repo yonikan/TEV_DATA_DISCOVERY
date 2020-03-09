@@ -7,18 +7,19 @@
   <!-- .add(stepMatchOverviewData.offset, 'hours') -->
 
   <button mat-button [matMenuTriggerFor]="menu" class="match-competition dropdown-btn">
-    {{ teamEventValidationService.getCompetitionNameById(stepMatchOverviewData.competition)?.name || 'Competition' }}
+    {{ teamEventValidationService.getCompetitionNameById(stepMatchOverviewData.competition) || 'Competition' }}
     <i class="demo-icon icon-icon-open-single">&#xe803;</i>
   </button>
 
   <div class="match-overview">
     <div class="home-team-container match-overview-inner-container">
       <img
+      *ngIf="stepMatchOverviewData.myTeamImage else teamLogoPlaceholder"
         src="{{stepMatchOverviewData.myTeamImage}}"
         alt="team-logo"
         class="team-logo"
       />
-    <div class="team-name">{{stepMatchOverviewData.myTeamName}}</div>
+    <div class="team-name">{{stepMatchOverviewData.myTeamName || 'My team'}}</div>
     </div>
 
     <div class="match-details-container match-overview-inner-container">
@@ -26,33 +27,16 @@
         <button
           mat-menu-item
           *ngFor="let competition of competitionOptions; let cardIndex = index"
-          (click)="setGameData(+competition.id,'selectedCompetition', 'competition')">
+          (click)="setGameData(+competition.id, 'competition')">
           {{ competition.name }}
         </button>
       </mat-menu>
-      <!-- <pm-content-dropdown [options]="competitionOptions" (optionClicked)="setGameData($event.value, 'selectedCompetition', 'competition')" [pointy]="true">
-        <div class="match-competition dropdown-btn" dropdown-button>
-          {{dataManager.selectedCompetition || 'competition'}}
-
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8">
-            <defs>
-                <filter id="a">
-                    <feFlood flood-color="#35083A" flood-opacity="1" result="floodOut"/>
-                    <feComposite in="floodOut" in2="SourceGraphic" operator="atop" result="compOut"/>
-                    <feBlend in="compOut" in2="SourceGraphic"/>
-                </filter>
-            </defs>
-            <path fill="#35083A" fill-rule="evenodd" d="M.316 1.862l.003-.002A1.063 1.063 0 0 1 0 1.111C0 .498.538 0 1.2 0c.35 0 .663.141.881.362L2.085.36 7 5.244 11.916.36l.003.002C12.138.141 12.45 0 12.8 0c.663 0 1.2.498 1.2 1.111 0 .289-.122.551-.318.749l.003.002-5.8 5.778A1.25 1.25 0 0 1 7 8c-.337 0-.657-.131-.884-.36l-5.8-5.778z" filter="url(#a)"/>
-          </svg>
-
-        </div>
-      </pm-content-dropdown> -->
       <div class="match-host">
         <mat-radio-group
           aria-labelledby="radio-group-label"
           class="radio-group"
-          (change)="setGameData($event.value, 'selecedHost', 'vanue')"
-          (optionClicked)="setGameData($event.value, 'selectedCompetition', 'competition')"
+          (change)="setGameData($event.value, 'vanue')"
+          (optionClicked)="setGameData($event.value, 'competition')"
         >
           <mat-radio-button
             [value]="1"
@@ -91,17 +75,7 @@
 
     <div class="away-team-container match-overview-inner-container">
 
-      <svg
-        class="team-logo"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="-20 -12.5 120 120"
-      >
-        <path
-          fill="#35083A"
-          fill-rule="evenodd"
-          d="M40.013 96.996l-.533-.275C26.335 89.934 16.355 79.378 9.817 65.344 2.985 50.679-.315 31.711.008 8.965l.016-1.088L39.659 0l41.339 8.093-.019 1.125c-.421 27.513-4.422 47.937-12.232 62.433-6.42 11.916-15.372 19.899-28.177 25.12l-.557.225zM14 66c3.012 5.421 4.311 13.489 26.143 28.048 18.343-7.645 37.03-23.838 38.175-83.747L14 66z"
-        />
-      </svg>
+      <div *ngIf="stepMatchOverviewData.opponentImage else teamLogoPlaceholder"></div>
 
       <input
         appRestrictLanguages
@@ -109,7 +83,7 @@
         type="text"
         placeholder="Opponent"
         [value]="stepMatchOverviewData.opponentName"
-        (blur)="setGameData($event.target.value,'selectedOpponent' ,'opponentName')"
+        (blur)="setGameData($event.target.value, 'opponentName')"
       />
       <!-- <div class="team-name dropdown-btn">
         Opponent
@@ -127,3 +101,18 @@
     </div>
   </div>
 </div>
+
+
+<ng-template #teamLogoPlaceholder>
+  <svg
+  class="team-logo"
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="-20 -12.5 120 120"
+>
+  <path
+    fill="#35083A"
+    fill-rule="evenodd"
+    d="M40.013 96.996l-.533-.275C26.335 89.934 16.355 79.378 9.817 65.344 2.985 50.679-.315 31.711.008 8.965l.016-1.088L39.659 0l41.339 8.093-.019 1.125c-.421 27.513-4.422 47.937-12.232 62.433-6.42 11.916-15.372 19.899-28.177 25.12l-.557.225zM14 66c3.012 5.421 4.311 13.489 26.143 28.048 18.343-7.645 37.03-23.838 38.175-83.747L14 66z"
+  />
+</svg>
+</ng-template>

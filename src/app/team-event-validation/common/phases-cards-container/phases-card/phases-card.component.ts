@@ -5,9 +5,10 @@ import { PhasesModalComponent } from '../../../common/phases-modal/phases-modal.
 // import moment = require('moment');
 import * as moment from 'moment';
 import { enumToString } from '../../../../core/helpers/helper-functions';
-import { TrainingDrills } from '../../../../core/enums/training-drills.enum'
+import { TrainingDrills } from '../../../../core/enums/training-drills.enum';
 import { TeamEventValidationService } from 'src/app/team-event-validation/team-event-validation.service';
-
+import { MILLISECONDS_MINUTE } from 'src/app/app.consts';
+import { ConvertedDatePipe } from '../../convertedDate.pipe';
 @Component({
   selector: 'app-phases-card',
   templateUrl: './phases-card.component.html',
@@ -15,42 +16,45 @@ import { TeamEventValidationService } from 'src/app/team-event-validation/team-e
 })
 export class PhasesCardComponent implements OnInit {
 
-  @Input() phase;
-  @Input() phasesCount;
-  @Input() index;
+  @Input() phase: any; // Phase
+  @Input() phaseName: string;
+  @Input() phasesCount: number;
+  @Input() index: number;
   @Output() deleteCard = new EventEmitter();
   @Output() savePhaseChanges = new EventEmitter();
 
-  mode = 'MATCH';
-
-  ellipsisOptions = [
+  mode: string = 'MATCH';
+  ellipsisOptions: any[] = [ // EllipsisOption[]
     // { name: 'Duplicate', icon: 'account_circle' },
     { name: 'Delete', icon: 'account_circle', action: 'onDeleteCard' }
   ];
 
 
-  constructor(private dialog: MatDialog, private teamEventValidationService: TeamEventValidationService) { }
+  constructor(private dialog: MatDialog, public teamEventValidationService: TeamEventValidationService, private convertedDatePipe: ConvertedDatePipe) { }
 
   ngOnInit() {
-    // console.log(this.phase)
   }
 
-  translatePhaseName(phaseSubTypeId) {
-    return this.teamEventValidationService.getStaticMatchPhasesList()[phaseSubTypeId].name;
+  translatePhaseName(phaseSubTypeId: number): string {
+    return phaseSubTypeId === 7 ? 'WARMUP' : 'MATCH PHASE'; // phaseSubTypeId;
   }
 
-  getTimeByFormat(startTime, endTime, offset?) {
-    const diff = moment(endTime).diff(startTime, 'minutes');
-    startTime = moment(startTime).add(offset, 'hours').format('hh:mm');
-    endTime = moment(endTime).add(offset, 'hours').format('hh:mm');
-    return `${startTime} - ${endTime} (${diff} min) - phase ${this.index + 1}/${this.phasesCount}`
+  getTimeByFormat(startTime: number, endTime: number, offset?: number): string {
+    const diff = Math.round((endTime - startTime) / MILLISECONDS_MINUTE);
+    const start = this.convertedDatePipe.transform(`${startTime}`, 'HH:mm', `${offset}`);
+    const end = this.convertedDatePipe.transform(`${endTime}`, 'HH:mm', `${offset}`);
+    return `${start} - ${end} (${diff} min) - phase ${this.index + 1}/${this.phasesCount}`;
   }
 
-  hundleEllipsisAction(ellipsisOption) {
+  hundleEllipsisAction(ellipsisOption: any): void { // EllipsisOption
     this[ellipsisOption.action]();
   }
 
-  onDeleteCard() {
+  getMatchPhaseNameById(id) {
+    return this.teamEventValidationService.getMatchPhaseNameById(id);
+  }
+
+  onDeleteCard(): void {
     const modalTitle = 'Delete Phase';
     const modalMessage = `Are you sure you want to delete ${this.phase.name} phase?`;
     const dialogRef = this.dialog.open(AreYouSureModalComponent, {
@@ -71,8 +75,7 @@ export class PhasesCardComponent implements OnInit {
       });
   }
 
-  phaseClicked() {
-
+  phaseClicked(): void {
     const dialogRef = this.dialog.open(PhasesModalComponent, {
       width: '870px',
       height: '290px',
@@ -86,7 +89,6 @@ export class PhasesCardComponent implements OnInit {
 
     dialogRef.afterClosed()
       .subscribe(updatedPhase => {
-        console.log(updatedPhase)
         if (updatedPhase) {
           this.savePhaseChanges.emit(updatedPhase);
         }

@@ -36,7 +36,8 @@
 			<app-step-match-subs
 				*ngIf="step.name === 'SUBS' && step5Data && currentStep === step.id"
 				[stepMatchSubsData]="step5Data"
-				(stepSelectionEmitter)="onStepSelectionEmitter($event, step, stepper)">
+        (stepSelectionEmitter)="onStepSelectionEmitter($event, step, stepper)"
+				(onValidate)="validateStep($event, 4)">
 			</app-step-match-subs>
 		</mat-step>
 	</mat-horizontal-stepper>
