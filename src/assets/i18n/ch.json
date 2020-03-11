@@ -91,5 +91,39 @@
         "leader-board": {
             "title": "Leaderboard"
         }
-    }
+	},
+	"errors": {
+		"pmErrorLoginPasswordExpired": "Your CHINESE password has been expired, you will be redirected to reset-password page.",
+		"pmErrorLoginBadLoginDetails": "Bad CHINESE login details",
+		"pmErrorResetPasswordTokenMissing": "",
+        "pmErrorResetPasswordPasswordMissing": "",
+        "pmErrorResetPasswordNewPasswordMissing": "",
+        "pmErrorResetPasswordEmailMissing": "",
+        "pmErrorResetPasswordTokenNotExists": "",
+        "pmErrorResetPasswordWrongOldPasswordError": "",
+        "pmErrorResetPasswordPasswordTokenExpired": "Reset CHINESE password has expired, you will be redirected to forgot-password page.",
+		"pmErrorInvalidObjectOldPasswordMissing": "",
+		"pmErrorReloginUserIdMissing": "",
+		"pmErrorForgotPasswordEmailNotValid": "",
+        "pmErrorForgotPasswordEmailMissing": "",
+		"pmErrorChangePasswordIsNotUnique": "",
+        "pmErrorChangePasswordTooShort": "",
+        "pmErrorChangePasswordMissingUpperCase": "",
+        "pmErrorChangePasswordMissingLowerCase": "",
+        "pmErrorChangePasswordMissingNumber": "",
+        "pmErrorChangePasswordTokenNotValid": "",
+		"pmErrorCreateNewStaffEmailNotValid": "",
+        "pmErrorCreateNewStaffUsernameAlreadyExists": "",
+        "pmErrorCreateNewStaffPasswordMissing": "",
+        "pmErrorCreateNewStaffEmailMissing": "",
+		"pmErrorUserNotFound": "",
+        "pmErrorLoginPasswordMissing": "",
+        "pmErrorLoginEmailMissing": "",
+		"pmErrorAdminResetPasswordUserIdMissing": "",
+        "pmErrorAdminResetPasswordPasswordMissing": "",
+		"generalError": "General CHINESE Error",
+		"generalErrorMessage": "An unknown CHINESE error occurred!",
+		"sessionIdle": "Session CHINESE Idle",
+		"sessionIdleMessage": "You are logged out due to CHINESE session idle."
+	}
 }

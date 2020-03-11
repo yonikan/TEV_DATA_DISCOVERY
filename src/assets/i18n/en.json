@@ -91,5 +91,39 @@
         "leader-board": {
             "title": "Leaderboard"
         }
-    }
+	},
+	"errors": {
+		"pmErrorLoginPasswordExpired": "Your password has been expired, you will be redirected to reset-password page.",
+		"pmErrorLoginBadLoginDetails": "Bad login details",
+		"pmErrorResetPasswordTokenMissing": "",
+        "pmErrorResetPasswordPasswordMissing": "",
+        "pmErrorResetPasswordNewPasswordMissing": "",
+        "pmErrorResetPasswordEmailMissing": "",
+        "pmErrorResetPasswordTokenNotExists": "",
+        "pmErrorResetPasswordWrongOldPasswordError": "",
+        "pmErrorResetPasswordPasswordTokenExpired": "Reset password has expired, you will be redirected to forgot-password page.",
+		"pmErrorInvalidObjectOldPasswordMissing": "",
+		"pmErrorReloginUserIdMissing": "",
+		"pmErrorForgotPasswordEmailNotValid": "",
+        "pmErrorForgotPasswordEmailMissing": "",
+		"pmErrorChangePasswordIsNotUnique": "",
+        "pmErrorChangePasswordTooShort": "",
+        "pmErrorChangePasswordMissingUpperCase": "",
+        "pmErrorChangePasswordMissingLowerCase": "",
+        "pmErrorChangePasswordMissingNumber": "",
+        "pmErrorChangePasswordTokenNotValid": "",
+		"pmErrorCreateNewStaffEmailNotValid": "",
+        "pmErrorCreateNewStaffUsernameAlreadyExists": "",
+        "pmErrorCreateNewStaffPasswordMissing": "",
+        "pmErrorCreateNewStaffEmailMissing": "",
+		"pmErrorUserNotFound": "",
+        "pmErrorLoginPasswordMissing": "",
+        "pmErrorLoginEmailMissing": "",
+		"pmErrorAdminResetPasswordUserIdMissing": "",
+		"pmErrorAdminResetPasswordPasswordMissing": "",
+		"generalError": "General Error",
+		"generalErrorMessage": "An unknown error occurred!",
+		"sessionIdle": "Session Idle",
+		"sessionIdleMessage": "You are logged out due to session idle."
+	}
 }

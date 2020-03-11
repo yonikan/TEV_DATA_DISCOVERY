@@ -5,34 +5,34 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ErrorModalComponent } from '../components/error-modal/error-modal.component';
 import { AuthService } from '../../auth/auth.service';
-import { StaticDataService } from '../services/static-data.service';
 import { Router } from '@angular/router';
+import { Errors } from '../enums/errors.enum';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({ providedIn: 'root' })
 export class ErrorInterceptor implements HttpInterceptor {
 	constructor(
 		private dialog: MatDialog,
 		private authService: AuthService,
-		private staticDataService: StaticDataService,
-		private router: Router) {}
+		private router: Router,
+		private translationService: TranslateService) {}
 
 	intercept(req: HttpRequest<any>, next: HttpHandler) {
-		const errors = this.staticDataService.getStaticErrorsData();
 		return next.handle(req)
 			.pipe(
 				catchError((error: HttpErrorResponse) => {
-					let modalTitle = 'General Error';
-					let modalMessage = 'An unknown error occurred!';
+					let modalTitle = this.getTraslatedError('generalError');
+					let modalMessage = this.getTraslatedError('generalErrorMessage');
 
 					if (error.status) {
 						modalTitle = `Error ${error.status}`;
 						if (error.status === 401) {
-							modalTitle = 'Session Idle';
-							modalMessage = 'You are logged out because of session idle.';
+							modalTitle = this.getTraslatedError('sessionIdle');
+							modalMessage = this.getTraslatedError('sessionIdleMessage');
 							this.authService.logout();
 						} else if(error.status === 412) {
 							if (error.error) {
-								modalMessage = errors[error.error.errorMessageId];
+								modalMessage = this.getTraslatedError(error.error.errorMessageId);
 							}
 							this.authService.logout();
 						}
@@ -47,6 +47,8 @@ export class ErrorInterceptor implements HttpInterceptor {
 							onClose: () => {
 								if (this.isRequireResetPassword(error.error)) {
 									this.router.navigate(['/login'], {queryParams: {page: 'reset-password'}});
+								} else if (this.isResetPasswordExpired(error.error)) {
+									this.router.navigate(['/login'], {queryParams: {page: 'forgot-password'}});
 								}
 							}
 						}
@@ -61,6 +63,18 @@ export class ErrorInterceptor implements HttpInterceptor {
 		if (!error) {
 			return false;
 		}
-		return error.errorMessageId === "pmErrorLoginPasswordExpired";
+		return error.errorMessageId === Errors.LOGIN_PASSWORD_EXPIRED;
+	}
+
+	isResetPasswordExpired(error) {
+		if (!error) {
+			return false;
+		}
+		return error.errorMessageId === Errors.RESET_PASSWORD_EXPIRED;
+	}
+
+	getTraslatedError(errorMessageId) {
+		const trans: any = this.translationService.get(`errors.${errorMessageId}`);
+		return trans.value;
 	}
 }
