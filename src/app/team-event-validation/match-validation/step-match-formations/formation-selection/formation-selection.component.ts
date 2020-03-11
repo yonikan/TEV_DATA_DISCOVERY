@@ -44,7 +44,8 @@ export class FormationSelectionComponent implements OnInit, OnChanges {
   }
 
   selectTactic({value}) {
-    this.onSelectTactic.emit(value);
+	this.onSelectTactic.emit(value);
+	this.sendToTeamEvent(value);
   }
 
   selectSub({value}) {
