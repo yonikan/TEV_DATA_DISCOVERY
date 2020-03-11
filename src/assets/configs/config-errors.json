@@ -1,0 +1,4 @@
+{
+	"pmErrorLoginPasswordExpired": "Your password has been expired, you will be redirected to reset-password page.",
+	"pmErrorLoginBadLoginDetails": "Bad login details"
+}

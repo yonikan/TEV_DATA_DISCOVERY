@@ -10,6 +10,10 @@ export class StaticDataService {
 	public getStaticData() {
 		return this.staticData;
 	}
+	private staticErrorsData: any = {};
+	public getStaticErrorsData() {
+		return this.staticErrorsData;
+	}
 
 	constructor(private http: HttpClient) { }
 
@@ -28,6 +32,11 @@ export class StaticDataService {
 
 		return this.http.get(url);
 	}
+
+	getErrorsData() {
+		this.getData('errors').subscribe(errorsData => this.staticErrorsData = errorsData);
+	}
 }
 
 export const initStaticData = (staticDataService: StaticDataService) => () => staticDataService.initStaticData()
+export const initErrorsStaticData = (staticDataService: StaticDataService) => () => staticDataService.getErrorsData()

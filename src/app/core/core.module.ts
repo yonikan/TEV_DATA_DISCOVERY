@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../shared/shared.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -12,7 +12,7 @@ import { ThemePickerComponent } from './theme-picker/theme-picker.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { ErrorModalComponent } from './components/error-modal/error-modal.component';
 import { ValidatedEventsToastComponent } from './components/validated-events-toast/validated-events-toast.component';
-import { StaticDataService } from './services/static-data.service';
+import { StaticDataService, initErrorsStaticData } from './services/static-data.service';
 import { VersionUpdateModalComponent } from './components/version-update-modal/version-update-modal.component';
 
 @NgModule({
@@ -37,6 +37,7 @@ import { VersionUpdateModalComponent } from './components/version-update-modal/v
 	VersionUpdateModalComponent
   ],
   providers: [
+	{ provide: APP_INITIALIZER, useFactory: initErrorsStaticData, deps: [StaticDataService], multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: VersionUpdateInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
 	{ provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }

@@ -5,12 +5,19 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ErrorModalComponent } from '../components/error-modal/error-modal.component';
 import { AuthService } from '../../auth/auth.service';
+import { StaticDataService } from '../services/static-data.service';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class ErrorInterceptor implements HttpInterceptor {
-	constructor(private dialog: MatDialog, private authService: AuthService) { }
+	constructor(
+		private dialog: MatDialog,
+		private authService: AuthService,
+		private staticDataService: StaticDataService,
+		private router: Router) {}
 
 	intercept(req: HttpRequest<any>, next: HttpHandler) {
+		const errors = this.staticDataService.getStaticErrorsData();
 		return next.handle(req)
 			.pipe(
 				catchError((error: HttpErrorResponse) => {
@@ -25,11 +32,7 @@ export class ErrorInterceptor implements HttpInterceptor {
 							this.authService.logout();
 						} else if(error.status === 412) {
 							if (error.error) {
-								if (error.error.errorMessageId === 'pmErrorLoginBadLoginDetails') {
-									modalMessage = 'Bad login details';
-								} else if (error.error.errorMessageId === 'pmErrorLoginPasswordExpiry') {
-									modalMessage = 'Your password has been expired';
-								}
+								modalMessage = errors[error.error.errorMessageId];
 							}
 							this.authService.logout();
 						}
@@ -40,12 +43,24 @@ export class ErrorInterceptor implements HttpInterceptor {
 						height: '200px',
 						data: {
 							title: modalTitle,
-							message: modalMessage
+							message: modalMessage,
+							onClose: () => {
+								if (this.isRequireResetPassword(error.error)) {
+									this.router.navigate(['/login'], {queryParams: {page: 'reset-password'}});
+								}
+							}
 						}
 					});
 
 					return throwError(error);
 				})
 			);
+	}
+
+	isRequireResetPassword(error): boolean {
+		if (!error) {
+			return false;
+		}
+		return error.errorMessageId === "pmErrorLoginPasswordExpired";
 	}
 }
