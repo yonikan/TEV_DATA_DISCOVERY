@@ -1,8 +1,8 @@
-<div class="step-training-players-container" *ngIf="(playerTimeframeErrors | async) != null">
+<div class="step-training-players-container">
 	<app-participating-players
 		(participatingPlayersEmitter)="onParticipatingPlayersEmitter($event)"
 		[teamEventId]="teamEventId"
 		[type]="'training'"
-		[playerTimeframeErrors]="playerTimeframeErrors | async">
+		[playerTimeframeErrors]="playerTimeframeErrors">
 	</app-participating-players>
 </div>

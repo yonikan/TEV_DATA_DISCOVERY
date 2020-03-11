@@ -45,6 +45,10 @@ export class ParticipatingPlayersService implements OnDestroy {
 		return this.stateData;
 	}
 
+	clearState() {
+		this.stateData.next({allPlayers: [], clubPlayers: []});
+	}
+
 	ngOnDestroy() {
 		this.store.unsubscribe();
 	}
