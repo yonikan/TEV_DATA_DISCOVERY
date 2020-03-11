@@ -71,7 +71,9 @@ export class ParticipatingPlayersComponent implements OnInit {
 					const err = player.activeTime.find(activeTime => activeTime.timeFrameType !== 'active');
 					if (err) {
 						player.isParticipated = false;
-						player.error = this.playerTimeframeErrors[player.activeTime[0].timeFrameType];
+						if (this.playerTimeframeErrors) {
+							player.error = this.playerTimeframeErrors[player.activeTime[0].timeFrameType];
+						}
 					}
 					return {...player};
 				});

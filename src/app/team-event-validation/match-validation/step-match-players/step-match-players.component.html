@@ -1,4 +1,4 @@
-<div class="step-match-players-container">
+<div class="step-match-players-container" *ngIf="(playerTimeframeErrors | async) != null">
 	<app-participating-players
 		(participatingPlayersEmitter)="onParticipatingPlayersEmitter($event)"
 		[playerTimeframeErrors]="playerTimeframeErrors | async"
