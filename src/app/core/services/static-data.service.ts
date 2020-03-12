@@ -14,6 +14,11 @@ export class StaticDataService {
 	public getStaticErrorsData() {
 		return this.staticErrorsData;
 	}
+	private playerTimeframeErrors: any = {};
+	public getPlayerTimeframeErrors() {
+		return this.playerTimeframeErrors;
+	}
+
 
 	constructor(private http: HttpClient) { }
 
@@ -36,7 +41,13 @@ export class StaticDataService {
 	getErrorsData() {
 		this.getData('errors').subscribe(errorsData => this.staticErrorsData = errorsData);
 	}
+
+	initPlayerTimeframeErrors() {
+		this.getData('player-timeframe-errors', 'team-event-validation')
+			.subscribe(playerErrors => this.playerTimeframeErrors = playerErrors);
+	}
 }
 
 export const initStaticData = (staticDataService: StaticDataService) => () => staticDataService.initStaticData()
 export const initErrorsStaticData = (staticDataService: StaticDataService) => () => staticDataService.getErrorsData()
+export const initPlayerTimeframeErrors = (staticDataService: StaticDataService) => () => staticDataService.initPlayerTimeframeErrors()

@@ -342,4 +342,8 @@ export class TeamEventValidationService {
     })];
     return { currentStep: selectedStep.selectedIndex, steps };
   }
+
+  initPlayerErrorsStaticData() {
+	  this.staticDataService.initPlayerTimeframeErrors();
+  }
 }

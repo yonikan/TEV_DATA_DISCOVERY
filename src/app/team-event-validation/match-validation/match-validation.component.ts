@@ -49,6 +49,7 @@ export class MatchValidationComponent implements OnInit, OnDestroy {
 	) { }
 
 	ngOnInit() {
+		this.teamEventValidationService.initPlayerErrorsStaticData();
 		this.positions = this.staticDataService.getData('positions', 'team-event-validation');
 		this.teamEventValidationService.fetchMatch(this.matchId);
 		this.matchValidationDataSub = this.teamEventValidationService
