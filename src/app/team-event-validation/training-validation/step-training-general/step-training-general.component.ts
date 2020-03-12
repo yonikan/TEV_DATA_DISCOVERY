@@ -20,6 +20,7 @@ export class StepTrainingGeneralComponent implements OnInit, OnChanges {
 		startTime: 0,
 		endTime: 0
 	};
+	isTrainingDurationOn = false;
 
 	constructor(
 		private teamEventValidationService: TeamEventValidationService,
@@ -30,6 +31,7 @@ export class StepTrainingGeneralComponent implements OnInit, OnChanges {
 		this.participatingPlayersService.getData(this.teamEventId, 'training');
 		// this.teamEventValidationService.phasesVerticesData
 		//   .subscribe(verticesData => this.verticesData = verticesData);
+		setTimeout(()=>{this.isTrainingDurationOn = true}, 300)
 	}
 
 	ngOnChanges() {

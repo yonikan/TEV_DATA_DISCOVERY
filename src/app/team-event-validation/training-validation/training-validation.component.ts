@@ -31,7 +31,8 @@ export class TrainingValidationComponent implements OnInit, OnDestroy {
 		0: true,
 		1: true,
 		2: true
-	}
+	};
+	isLoadingTest = true;
 
 	constructor(
 		private teamEventValidationService: TeamEventValidationService,
@@ -40,6 +41,7 @@ export class TrainingValidationComponent implements OnInit, OnDestroy {
 	) { }
 
 	ngOnInit() {
+		console.log('onINIT!');
 		this.teamEventValidationService.initPlayerErrorsStaticData();
 		this.teamEventValidationService.fetchTraining(this.trainingId);
 		this.trainingValidationDataSub = this.teamEventValidationService
@@ -54,6 +56,9 @@ export class TrainingValidationComponent implements OnInit, OnDestroy {
 				this.step2Data = trainingValidationDataCopy.participatingPlayers;
 				this.step3Data = { ...trainingValidationDataCopy.phases, ...trainingValidationDataCopy.metadata };
 			});
+		setTimeout(() => {
+			this.isLoadingTest = false;
+		}, 800);
 	}
 
 	onStepSelectionEmitter(stepNumber, step, stepper) {

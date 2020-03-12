@@ -1,5 +1,5 @@
 <div class="step-training-general-container">
-		<app-training-duration
+		<app-training-duration *ngIf="true"
 			(trainingDurationEmitter)="onTrainingDurationEmitter($event)"
 			[verticesData]="verticesData"
 			[offset]="stepTrainingGeneralData.offset"

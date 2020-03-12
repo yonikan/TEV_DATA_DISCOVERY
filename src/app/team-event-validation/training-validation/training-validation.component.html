@@ -1,8 +1,8 @@
 <div class="training-validation-container">
-	<div *ngIf="isLoading || !step1Data" class="loader-container">
+	<div *ngIf="isLoading || !step1Data || isLoadingTest" class="loader-container">
         <mat-spinner></mat-spinner>
     </div>
-	<mat-horizontal-stepper [linear]="true" *ngIf="!isLoading && step1Data" (selectionChange)="onStepChange($event)" #stepper>
+	<mat-horizontal-stepper [linear]="true" *ngIf="!isLoading && step1Data && !isLoadingTest" (selectionChange)="onStepChange($event)" #stepper>
 		<mat-step *ngFor="let step of steps; let i = index" [completed]="step.isCompleted">
 			<ng-template matStepLabel>
 				<div [ngClass]="{'stpper-bold-label': step.id === currentStep}">
