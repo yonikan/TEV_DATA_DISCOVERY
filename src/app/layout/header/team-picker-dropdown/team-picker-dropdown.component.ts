@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { TranslationPickerService } from 'src/app/core/services/translation-picker.service';
 import { TeamPickerService } from 'src/app/core/services/team-picker.service';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-team-picker-dropdown',
@@ -14,7 +15,8 @@ export class TeamPickerDropdownComponent implements OnInit {
   selectedItemImgPath: string;
   defaultItem: number;
 
-  constructor(public teamPickerService: TeamPickerService) { }
+  constructor(public teamPickerService: TeamPickerService,    public authService: AuthService,
+    ) { }
 
   ngOnInit() {
     this.selectedItemImgPath = this.items[0].teamPicture;
@@ -31,6 +33,6 @@ export class TeamPickerDropdownComponent implements OnInit {
     this.selectedItemImgPath = selectedTeam.teamPicture;
 
     // console.log('selectedTeam: ', selectedTeam);
-    this.teamPickerService.setCurrentTeam(selectedTeam);
+    this.authService.setCurrentTeam(selectedTeam);
   }
 }

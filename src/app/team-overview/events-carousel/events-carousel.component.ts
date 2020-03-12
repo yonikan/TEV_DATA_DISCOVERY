@@ -12,6 +12,7 @@ import { enumToString } from '../../core/helpers/helper-functions';
 import { TeamEvents } from '../../core/enums/team-events.enum';
 import { AuthService } from '../../auth/auth.service';
 import { TeamOverviewService } from '../team-overview.service';
+import {ChangeDetectorRef } from '@angular/core';
 
 @Component({
 	selector: 'app-events-carousel',
@@ -56,7 +57,8 @@ export class EventsCarouselComponent implements OnInit, OnDestroy {
 		private uiComponentsService: UiComponentsService,
 		private router: Router,
 		private teamOverviewService: TeamOverviewService,
-		private dialog: MatDialog
+		private dialog: MatDialog,
+		private cdref: ChangeDetectorRef
 	) { }
 
 	ngOnInit() {
@@ -174,5 +176,9 @@ export class EventsCarouselComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 		this.teamEventAfterValidationSub.unsubscribe();
 		this.getUserLoginDataListenerSubscription.unsubscribe();
+	}
+
+	ngAfterContentChecked() {
+		this.cdref.detectChanges();
 	}
 }

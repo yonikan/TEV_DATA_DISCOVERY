@@ -10,6 +10,7 @@ import { UserLogin } from './user-login.model';
 import { ServerEnvService } from '../core/services/server-env.service';
 import { LOGIN_DATA } from 'server/data/login.data';
 import { CookieService } from 'ngx-cookie-service';
+import { UiComponentsService } from '../core/services/ui-components.service';
 
 @Injectable({
    providedIn: 'root'
@@ -28,7 +29,8 @@ export class AuthService {
     private authorizationService: AuthorizationService,
     private dialog: MatDialog,
 	private serverEnvService: ServerEnvService,
-	private cookieService: CookieService
+  private cookieService: CookieService,
+  private uiComponentsService: UiComponentsService,
   ) {}
 
   getToken(): string {
@@ -182,6 +184,22 @@ export class AuthService {
     this.postSetPassword(token, password)
       .subscribe((results: any) => {
         this.router.navigateByUrl('/login?page=user-login');
+      });
+  }
+
+  setCurrentTeam(selectedTeam: any) {
+    this.uiComponentsService.setIsLoading(true);
+
+    const BASE_URL = this.serverEnvService.getBaseUrl();
+    const API_VERSION = 'v2';
+    this.http.get<any>(`${BASE_URL}/${API_VERSION}/user/${this.userLoginData.userId}/re-login`)
+      .subscribe((updatedLoginDetails: UserLogin) => {
+        this.setUserLoginData(updatedLoginDetails);
+        // this.authService.getUserLoginDataListener().next(updatedLoginDetails);
+        this.uiComponentsService.setIsLoading(false);
+        this.router.navigate(['team-overview']);
+      }, err => {
+        this.uiComponentsService.setIsLoading(false);
       });
   }
 }
