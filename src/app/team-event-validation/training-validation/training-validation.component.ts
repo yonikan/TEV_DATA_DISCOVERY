@@ -40,6 +40,7 @@ export class TrainingValidationComponent implements OnInit, OnDestroy {
 	) { }
 
 	ngOnInit() {
+		this.teamEventValidationService.initPlayerErrorsStaticData();
 		this.teamEventValidationService.fetchTraining(this.trainingId);
 		this.trainingValidationDataSub = this.teamEventValidationService
 			.getTrainingValidationDataListener()

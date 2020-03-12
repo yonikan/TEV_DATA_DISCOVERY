@@ -13,7 +13,7 @@ export class StepTrainingPlayersComponent implements OnInit {
 	@Input() stepTrainingPlayersData: any;
 	@Output() stepSelectionEmitter = new EventEmitter<number>();
 	isNextBtnDisabled = false;
-	playerTimeframeErrors: Observable<Object>;
+	playerTimeframeErrors;
 
 	constructor(
 		private teamEventValidationService: TeamEventValidationService,
@@ -21,7 +21,7 @@ export class StepTrainingPlayersComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		this.playerTimeframeErrors = this.staticDataService.getData('player-timeframe-errors', 'team-event-validation')
+		this.playerTimeframeErrors = this.staticDataService.getPlayerTimeframeErrors();
 	}
 
 	nextStep() {

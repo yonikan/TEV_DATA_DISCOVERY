@@ -12,12 +12,12 @@ export class StepMatchPlayersComponent implements OnInit {
 	@Input() teamEventId: any;
 	@Input() stepMatchPlayersData: any;
 	@Output() stepSelectionEmitter = new EventEmitter<number>();
-	playerTimeframeErrors: Observable<object>;
+	playerTimeframeErrors;
 
 	constructor(private teamEventValidationService: TeamEventValidationService, private staticDataService: StaticDataService) { }
 
 	ngOnInit() {
-		this.playerTimeframeErrors = this.staticDataService.getData('player-timeframe-errors', 'team-event-validation')
+		this.playerTimeframeErrors = this.staticDataService.getPlayerTimeframeErrors();
 	}
 
 	nextStep() {

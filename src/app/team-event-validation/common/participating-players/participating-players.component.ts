@@ -1,9 +1,10 @@
-import { Component, OnInit, Input, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, ViewChild, Output, EventEmitter, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TeamEventValidationService } from '../../team-event-validation.service';
 import { ContactSupportModalComponent } from 'src/app/shared/contact-support-modal/contact-support-modal.component';
 import { ParticipatingPlayersService } from './participating-players.service';
 import { AuthService } from 'src/app/auth/auth.service';
+import { Subscription } from 'rxjs';
 
 interface InitialState {
 	excludedPlayers: Array<Object>;
@@ -17,10 +18,10 @@ interface InitialState {
 	templateUrl: './participating-players.component.html',
 	styleUrls: ['./participating-players.component.scss']
 })
-export class ParticipatingPlayersComponent implements OnInit {
+export class ParticipatingPlayersComponent implements OnInit, OnDestroy {
 	@Input() teamEventId: any;
 	@Input() type = 'training';
-	@Input() playerTimeframeErrors = [];
+	@Input() playerTimeframeErrors = {};
 	@Output() participatingPlayersEmitter = new EventEmitter<any>();
 	@ViewChild('swapPlayersPanel', { static: false }) _swapPlayersPanel: ElementRef;
 
@@ -48,18 +49,20 @@ export class ParticipatingPlayersComponent implements OnInit {
 	isResetAllowed = false;
 	userId;
 	team: any = {};
+	getStateSubscribtion: Subscription;
 
 	constructor(
 		private participatingPlayersService: ParticipatingPlayersService,
 		private dialog: MatDialog,
 		private teamEventValidationService: TeamEventValidationService,
-		private authService: AuthService) {
+		private authService: AuthService,
+		private cdRef: ChangeDetectorRef) {
 	}
 
 	ngOnInit() {
 		[this.team] = this.authService.getUserLoginData().teams;
 		this.store = this.participatingPlayersService.getStore();
-		this.participatingPlayersService.getState().subscribe(data => {
+		this.getStateSubscribtion = this.participatingPlayersService.getState().subscribe(data => {
 			const {allPlayers, clubPlayers} = data;
 			if (allPlayers) {
 				if (this.allPlayers.length === 0) {
@@ -81,6 +84,7 @@ export class ParticipatingPlayersComponent implements OnInit {
 				this.clubPlayers = clubPlayers;
 				this.clubPlayersGroup = this.getClubPlayers();
 			}
+			this.cdRef.detectChanges();
 		});
 	}
 
@@ -239,5 +243,10 @@ export class ParticipatingPlayersComponent implements OnInit {
 			acc[val.id] = val;
 			return acc;
 		}, {}));
+	}
+
+	ngOnDestroy(): void {
+		this.getStateSubscribtion.unsubscribe();
+		this.participatingPlayersService.clearState();
 	}
 }
