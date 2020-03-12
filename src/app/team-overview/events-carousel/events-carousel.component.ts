@@ -25,6 +25,7 @@ export class EventsCarouselComponent implements OnInit, OnDestroy {
 	index = 0;
 	teamEventAfterValidation: any;
 	private teamEventAfterValidationSub: Subscription;
+	private getUserLoginDataListenerSubscription: Subscription;
 	config: SwiperConfigInterface = {
 		direction: 'horizontal',
 		keyboard: true,
@@ -59,7 +60,7 @@ export class EventsCarouselComponent implements OnInit, OnDestroy {
 	) { }
 
 	ngOnInit() {
-		this.authService.getUserLoginDataListener().subscribe(data => {
+		this.getUserLoginDataListenerSubscription = this.authService.getUserLoginDataListener().subscribe(data => {
 			if (data.teams) {
 				const [team] = data.teams;
 				if (team) {
@@ -172,5 +173,6 @@ export class EventsCarouselComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy() {
 		this.teamEventAfterValidationSub.unsubscribe();
+		this.getUserLoginDataListenerSubscription.unsubscribe();
 	}
 }

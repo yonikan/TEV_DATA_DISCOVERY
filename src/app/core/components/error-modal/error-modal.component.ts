@@ -10,11 +10,10 @@ export class ErrorModalComponent {
 
   constructor(
     public dialogRef: MatDialogRef<any>,
-    @Inject(MAT_DIALOG_DATA) public data: { message: string, title: string, onClose: Function, modalData?: any }
+    @Inject(MAT_DIALOG_DATA) public data: { message: string, title: string, modalData?: any }
   ){}
 
   onCancel() {
-	this.data.onClose && this.data.onClose();
     this.dialogRef.close();
   }
 }

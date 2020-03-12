@@ -39,7 +39,7 @@ export class AuthService {
 		if (this.isAuthenticated) {
 			return of(this.isAuthenticated);
 		}
-		if (this.cookieService.get('token')) {
+		if (this.cookieService.get('token') && this.cookieService.get('userId')) {
 			return this.reLogin().pipe(map(value => {
 				return true;
 			}))
@@ -81,7 +81,6 @@ export class AuthService {
 		tap(res => {
 			// save app-version
 			this.localStorageService.storeOnLocalStorage('app-version', res.headers.get('app-version'));
-			return res;
 		}),
 		map(res => res.body)
 	);
@@ -89,7 +88,7 @@ export class AuthService {
   }
 
   checkLogin() {
-	if (this.cookieService.get('token')) {
+	if (this.cookieService.get('token') && this.cookieService.get('userId')) {
 	  this.reLogin()
 		.subscribe((userLoginDataResponse: UserLogin) => {
 			this.userLoginData = userLoginDataResponse;
@@ -112,7 +111,8 @@ export class AuthService {
       this.userLoginDataListener.next(userLoginDataResponse);
       this.authorizationService.allowedFeatures = userLoginDataResponse.features;
       this.token = userLoginDataResponse.token;
-      this.localStorageService.storeOnCookie('token', this.token);
+	  this.localStorageService.storeOnCookie('token', this.token);
+	  this.localStorageService.storeOnCookie('userId', userLoginDataResponse.userId);
       this.isAuthenticated = true;
       this.authStatusListener.next(true);
       this.router.navigate(['/team-overview']);
@@ -128,6 +128,7 @@ export class AuthService {
 
   logout() {
 	this.cookieService.delete('token');
+	this.cookieService.delete('userId');
     this.token = null;
     this.isAuthenticated = false;
     this.authStatusListener.next(false);

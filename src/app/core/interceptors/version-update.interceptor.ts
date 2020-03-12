@@ -28,7 +28,6 @@ export class VersionUpdateInterceptor implements HttpInterceptor {
 					this.showUpdateVersionModal();
 					this.authService.logout();
 				}
-				return event;
 			})
 		);
 	}

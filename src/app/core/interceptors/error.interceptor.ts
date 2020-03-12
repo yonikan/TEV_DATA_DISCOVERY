@@ -8,6 +8,7 @@ import { AuthService } from '../../auth/auth.service';
 import { Router } from '@angular/router';
 import { Errors } from '../enums/errors.enum';
 import { TranslateService } from '@ngx-translate/core';
+import { UiComponentsService } from '../services/ui-components.service';
 
 @Injectable({ providedIn: 'root' })
 export class ErrorInterceptor implements HttpInterceptor {
@@ -15,24 +16,25 @@ export class ErrorInterceptor implements HttpInterceptor {
 		private dialog: MatDialog,
 		private authService: AuthService,
 		private router: Router,
-		private translationService: TranslateService) {}
+		private translationService: TranslateService,
+		private uiComponentsService: UiComponentsService) {}
 
 	intercept(req: HttpRequest<any>, next: HttpHandler) {
 		return next.handle(req)
 			.pipe(
 				catchError((error: HttpErrorResponse) => {
-					let modalTitle = this.getTraslatedError('generalError');
-					let modalMessage = this.getTraslatedError('generalErrorMessage');
+					let modalTitle = this.getTranslatedError('generalError');
+					let modalMessage = this.getTranslatedError('generalErrorMessage');
 
 					if (error.status) {
 						modalTitle = `Error ${error.status}`;
 						if (error.status === 401) {
-							modalTitle = this.getTraslatedError('sessionIdle');
-							modalMessage = this.getTraslatedError('sessionIdleMessage');
+							modalTitle = this.getTranslatedError('sessionIdle');
+							modalMessage = this.getTranslatedError('sessionIdleMessage');
 							this.authService.logout();
 						} else if(error.status === 412) {
 							if (error.error) {
-								modalMessage = this.getTraslatedError(error.error.errorMessageId);
+								modalMessage = this.getTranslatedError(error.error.errorMessageId);
 							}
 							this.authService.logout();
 						}
@@ -43,20 +45,24 @@ export class ErrorInterceptor implements HttpInterceptor {
 						height: '200px',
 						data: {
 							title: modalTitle,
-							message: modalMessage,
-							onClose: () => {
-								if (this.isRequireResetPassword(error.error)) {
-									this.router.navigate(['/login'], {queryParams: {page: 'reset-password'}});
-								} else if (this.isResetPasswordExpired(error.error)) {
-									this.router.navigate(['/login'], {queryParams: {page: 'forgot-password'}});
-								}
-							}
+							message: modalMessage
 						}
-					});
+					})
+					.afterClosed()
+					.subscribe(modalData => this.onCloseModal(error.error));
 
 					return throwError(error);
 				})
 			);
+	}
+
+	onCloseModal(error) {
+		if (this.isRequireResetPassword(error)) {
+			this.router.navigate(['/login'], {queryParams: {page: 'reset-password'}});
+		} else if (this.isResetPasswordExpired(error)) {
+			this.router.navigate(['/login'], {queryParams: {page: 'forgot-password'}});
+		}
+		this.uiComponentsService.setIsSidepanelOpen(false);
 	}
 
 	isRequireResetPassword(error): boolean {
@@ -73,8 +79,8 @@ export class ErrorInterceptor implements HttpInterceptor {
 		return error.errorMessageId === Errors.RESET_PASSWORD_EXPIRED;
 	}
 
-	getTraslatedError(errorMessageId) {
-		const trans: any = this.translationService.get(`errors.${errorMessageId}`);
-		return trans.value;
+	getTranslatedError(errorMessageId) {
+		const translation: any = this.translationService.get(`errors.${errorMessageId}`);
+		return translation.value;
 	}
 }

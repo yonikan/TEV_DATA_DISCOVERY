@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { fadeInOutAnimation } from '../../core/animations/fade-in-out.animation';
 import { EventsCarouselModalComponent } from '../events-carousel/events-carousel-modal/events-carousel-modal.component';
 import { MatDialog } from '@angular/material';
@@ -6,6 +6,7 @@ import { UiComponentsService } from '../../core/services/ui-components.service';
 import { ServerEnvService } from '../../core/services/server-env.service';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../auth/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-validated-events',
@@ -13,11 +14,12 @@ import { AuthService } from '../../auth/auth.service';
   styleUrls: ['./validated-events.component.scss'],
   animations: [fadeInOutAnimation]
 })
-export class ValidatedEventsComponent implements OnInit {
+export class ValidatedEventsComponent implements OnInit, OnDestroy {
   teamEvents;
   isTeamEventsLoading;
   index = 0;
   isLoading = true;
+  getUserLoginDataListenerSubscription: Subscription;
 
   constructor(
     private dialog: MatDialog,
@@ -28,7 +30,7 @@ export class ValidatedEventsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-	this.authService.getUserLoginDataListener().subscribe(data => {
+	this.getUserLoginDataListenerSubscription = this.authService.getUserLoginDataListener().subscribe(data => {
 		if (data.teams) {
 			const TEAM_ID = data.teams[0].id;
 			const BASE_URL = this.serverEnvService.getBaseUrl();
@@ -91,5 +93,9 @@ export class ValidatedEventsComponent implements OnInit {
 
   onDownloadPdfReport(report) {
     console.log('report: ', report);
+  }
+
+  ngOnDestroy(): void {
+	this.getUserLoginDataListenerSubscription.unsubscribe();
   }
 }
