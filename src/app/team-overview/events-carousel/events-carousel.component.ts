@@ -62,24 +62,93 @@ export class EventsCarouselComponent implements OnInit, OnDestroy {
 	) { }
 
 	ngOnInit() {
-		this.getUserLoginDataListenerSubscription = this.authService.getUserLoginDataListener().subscribe(data => {
-			if (data.teams) {
-				const [team] = data.teams;
-				if (team) {
-					const TEAM_ID = team.id;
-					const BASE_URL = this.serverEnvService.getBaseUrl();
-					const API_VERSION = 'v2';
-					this.http
-						.get<any>(`${BASE_URL}/${API_VERSION}/team/${TEAM_ID}/team-events/unvalidated`)
-						.subscribe((result: any) => {
-							this.teamEvents = result;
-							this.isTeamEventsLoading = false;
-						}, (err) => {
-							console.log('err: ', err);
-						});
-				}
-			}
+		// const TEAM_ID = this.authService.getCurrentTeamId();
+		// console.log('TEAM_ID: ', TEAM_ID);
+		this.getUserLoginDataListenerSubscription = this.authService.getUserLoginDataListener()
+			.subscribe(data => {
+				console.log('data: ', data);
+				// let teamId;
+				// if(!data.selectedTeam) {
+				// 	teamId = data.teams[0].id;
+				// } else {
+				// 	teamId = data.selectedTeam;
+				// }
+				const TEAM_ID = (!data.selectedTeam) ? data.teams[0].id : data.selectedTeam;
 
+				const BASE_URL = this.serverEnvService.getBaseUrl();
+				const API_VERSION = 'v2';
+				this.http
+				  .get<any>(`${BASE_URL}/${API_VERSION}/team/${TEAM_ID}/team-events/unvalidated`)
+				  .subscribe((result: any) => {
+					this.teamEvents = result;
+					this.isTeamEventsLoading = false;
+				  }, (err) => {
+					console.log('err: ', err);
+				  });
+
+
+
+				// if (data) {
+				// 	console.log('data: ', data);
+				// 	const TEAM_ID = team.selectedTeam;
+				// 	console.log('TEAM_ID : ', TEAM_ID );
+				// 	if(data.selectedTeam) {
+
+				// 	}
+				// 	const TEAM_ID = data.selectedTeam;
+				// 	const BASE_URL = this.serverEnvService.getBaseUrl();
+				// 	const API_VERSION = 'v2';
+				// 	this.http
+				// 		.get<any>(`${BASE_URL}/${API_VERSION}/team/${TEAM_ID}/team-events/unvalidated`)
+				// 		.subscribe((result: any) => {
+				// 			this.teamEvents = result;
+				// 			this.isTeamEventsLoading = false;
+				// 		}, (err) => {
+				// 			console.log('err: ', err);
+				// 		});
+				// }
+
+				// if (data.teams) {
+				// 	const [team] = data.teams;
+				// 	if (team) {
+				// 		console.log('team: ', team);
+				// 		// const TEAM_ID = team.selectedTeam;
+				// 		// console.log('TEAM_ID : ', TEAM_ID );
+				// 		const TEAM_ID = team.id;
+				// 		const BASE_URL = this.serverEnvService.getBaseUrl();
+				// 		const API_VERSION = 'v2';
+				// 		this.http
+				// 			.get<any>(`${BASE_URL}/${API_VERSION}/team/${TEAM_ID}/team-events/unvalidated`)
+				// 			.subscribe((result: any) => {
+				// 				this.teamEvents = result;
+				// 				this.isTeamEventsLoading = false;
+				// 			}, (err) => {
+				// 				console.log('err: ', err);
+				// 			});
+				// 	}
+				// }
+
+
+
+				// if (data.teams) {
+				// 	const [team] = data.teams;
+				// 	if (team) {
+				// 		console.log('team: ', team);
+				// 		// const TEAM_ID = team.selectedTeam;
+				// 		// console.log('TEAM_ID : ', TEAM_ID );
+				// 		const TEAM_ID = team.id;
+				// 		const BASE_URL = this.serverEnvService.getBaseUrl();
+				// 		const API_VERSION = 'v2';
+				// 		this.http
+				// 			.get<any>(`${BASE_URL}/${API_VERSION}/team/${TEAM_ID}/team-events/unvalidated`)
+				// 			.subscribe((result: any) => {
+				// 				this.teamEvents = result;
+				// 				this.isTeamEventsLoading = false;
+				// 			}, (err) => {
+				// 				console.log('err: ', err);
+				// 			});
+				// 	}
+				// }
 		});
 
 

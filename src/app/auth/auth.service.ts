@@ -21,6 +21,7 @@ export class AuthService {
   private authStatusListener = new BehaviorSubject<boolean>(false);
   private userLoginData: UserLogin;
   private userLoginDataListener = new BehaviorSubject<any>({});
+  private selectedTeamId: number;
 
   constructor(
     private http: HttpClient,
@@ -187,13 +188,21 @@ export class AuthService {
       });
   }
 
-  setCurrentTeam(selectedTeam: any) {
-    this.uiComponentsService.setIsLoading(true);
+  getCurrentTeamId(): number {
+    return this.selectedTeamId;
+  }
 
+  setCurrentTeam(selectedTeam: any) {
+    this.selectedTeamId = selectedTeam.id;
+
+    this.uiComponentsService.setIsLoading(true);
     const BASE_URL = this.serverEnvService.getBaseUrl();
     const API_VERSION = 'v2';
     this.http.get<any>(`${BASE_URL}/${API_VERSION}/user/${this.userLoginData.userId}/re-login`)
-      .subscribe((updatedLoginDetails: UserLogin) => {
+      .subscribe((updatedLoginDetails: any) => {
+        updatedLoginDetails['selectedTeam'] = this.selectedTeamId;
+        // console.log('updatedLoginDetails: ', updatedLoginDetails);
+
         this.setUserLoginData(updatedLoginDetails);
         // this.authService.getUserLoginDataListener().next(updatedLoginDetails);
         this.uiComponentsService.setIsLoading(false);

@@ -8,4 +8,5 @@ export interface UserLogin {
     token?: string;
     features?: any;
     teams?: any[];
+    selectedTeam?: number;
 }
